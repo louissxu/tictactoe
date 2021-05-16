@@ -80,8 +80,7 @@ const ui = (() => {
     };
 
     const resetClicked = (e) => {
-        console.log(e);
-        console.log(e.target);
+        events.emit("resetClicked", "");
     };
 
     // Bind Events
@@ -112,7 +111,7 @@ const Player = (initialSymbol = null) => {
 
 // Game Factory
 const Game = (initialState = null) => {
-    const state = initialState ?? [["", "", ""],
+    let state = initialState ?? [["", "", ""],
                                    ["", "", ""],
                                    ["", "", ""]];
     const p1 = Player("X")
@@ -197,9 +196,10 @@ const Game = (initialState = null) => {
     }
 
     const resetGame = () => {
-        game.state = [["", "", ""],
-                      ["", "", ""],
-                      ["", "", ""]];
+        state = [["", "", ""],
+                 ["", "", ""],
+                 ["", "", ""]];
+        events.emit("boardStateUpdated", state)
     }
 
     // Bind Events
