@@ -39,6 +39,7 @@ const ui = (() => {
     // Cache DOM
     const gameBoard = document.querySelector("#game-board");
     const gameControls = document.querySelector("#game-controls");
+    const alertText = document.querySelector("#alert-text");
 
     // UI Functions
     const clearChildren = (node) => {
@@ -71,8 +72,13 @@ const ui = (() => {
         }
     }
 
+    const disableBoard = () => {
+        gameBoard.querySelectorAll(".cell").forEach((cell) => cell.setAttribute("disabled", ""));
+    }
+
     const renderGameWon = (winner) => {
-        console.log(`Game won by ${winner}`)
+        disableBoard()        
+        alertText.textContent = `${winner.getName()} wins!`
     }
 
     const cellClicked = (e) => {
@@ -101,11 +107,14 @@ const ui = (() => {
 })();
 
 // Player Factory
-const Player = (initialSymbol = null) => {
+const Player = (initialName, initialSymbol = null) => {
     const symbol = initialSymbol ?? "X";
+    const name = initialName;
     const getSymbol = () => symbol;
+    const getName = () => name;
 
-    return {getSymbol}
+    return {getSymbol,
+            getName,}
 }
 
 
@@ -114,8 +123,8 @@ const Game = (initialState = null) => {
     let state = initialState ?? [["", "", ""],
                                    ["", "", ""],
                                    ["", "", ""]];
-    const p1 = Player("X")
-    const p2 = Player("O")
+    const p1 = Player("Player 1", "X")
+    const p2 = Player("Player 2", "O")
 
     // Game Functions
     const nextPlayer = () => {
@@ -190,8 +199,10 @@ const Game = (initialState = null) => {
             winner = state[0][2];
         }
 
-        if (winner) {
-            events.emit("gameWon", winner)
+        if (winner === p1.getSymbol()) {
+            events.emit("gameWon", p1)
+        } else if (winner === p2.getSymbol()) {
+            events.emit("gameWon", p2)
         }
     }
 
