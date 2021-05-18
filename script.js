@@ -41,31 +41,31 @@ const ui = (() => {
     const gameControls = document.querySelector("#game-controls");
     const alertText = document.querySelector("#alert-text");
 
+    const startGameButton = gameControls.querySelector("#start-game");
+    const playerSettingsButtons = gameControls.querySelectorAll("input[type='radio']", "input[type='radio']+label")
+    const resetGameButton = gameControls.querySelector("#reset-game");
+
     // UI Functions
-    const clearChildren = (node) => {
-        while (node.firstChild) {
-            node.removeChild(node.lastChild);
+    const clearBoard = () => {
+        while (gameBoard.firstChild) {
+            gameBoard.removeChild(gameBoard.lastChild);
         }
     }
 
-    const clearBoard = () => {
-        clearChildren(gameBoard);
-    }
-
-    const renderBoard = (state) => {
+    const renderBoard = (board) => {
         clearBoard();
 
-        for (let y = 0; y < state.length; y++) {
-            for (let x=0; x < state[y].length; x++) {
+        for (let y = 0; y < board.length; y++) {
+            for (let x=0; x < board[y].length; x++) {
                 const cell = document.createElement("button");
-                cell.textContent = state[y][x];
+                cell.textContent = board[y][x];
                 cell.setAttribute("data-x-coordinate", x);
                 cell.setAttribute("data-y-coordinate", y);
                 cell.classList.add("cell")
 
-                if (state[y][x] != "") {
-                    cell.setAttribute("disabled", "")
-                }
+                // if (board[y][x] != "") {
+                //     cell.setAttribute("disabled", "")
+                // }
 
                 gameBoard.appendChild(cell);
             }
@@ -76,59 +76,104 @@ const ui = (() => {
         gameBoard.querySelectorAll(".cell").forEach((cell) => cell.setAttribute("disabled", ""));
     }
 
-    const renderGameWon = (winner) => {
-        disableBoard()        
-        alertText.textContent = `${winner.getName()} wins!`
+    const clickedStart = (e) => {
+        events.emit("clickedStart", {
+            p1Name: "Player 1",
+            p1Symbol: "X",
+            p1Computer: gameControls.querySelector("input[name='p1']:checked").value,  // Ref: https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
+            p2Name: "Player 2",
+            p2Symbol: "O",
+            p2Computer: gameControls.querySelector("input[name='p2']:checked").value,
+        });
     }
 
-    const cellClicked = (e) => {
-        events.emit("cellClicked", [e.target.getAttribute("data-x-coordinate"), e.target.getAttribute("data-y-coordinate")]);
-    };
+    const clickedReset = (e) => {
+        events.emit("clickedReset", "");
+    }
 
-    const resetClicked = (e) => {
-        events.emit("resetClicked", "");
-    };
+    const clickedCell = (e) => {
+        events.emit("clickedCell", {
+            x: e.target.getAttribute("data-x-coordinate"),
+            y: e.target.getAttribute("data-y-coordinate")
+        });
+    }
+
+    const renderGameStart = () => {
+        alertText.textContent = ""
+        playerSettingsButtons.forEach((element) => element.setAttribute("disabled", ""));
+        startGameButton.setAttribute("disabled", "");
+        resetGameButton.removeAttribute("disabled");
+    }
+
+    const renderGameWon = (player) => {
+        disableBoard();
+        alertText.textContent = `${player.getName()} wins!`;
+    }
+
+    const renderGameDrawn = () => {
+        disableBoard();
+        alertText.textContent = `Draw! Try again.`;
+    }
+
+    const renderGameReset = (board) => {
+        disableBoard();
+        alertText.textContent = "";
+
+        playerSettingsButtons.forEach((element) => element.removeAttribute("disabled"));
+        startGameButton.removeAttribute("disabled");
+        resetGameButton.setAttribute("disabled", "");
+    }
+
+    const renderPlayerUpdated = (player) => {
+        alertText.textContent = `${player.getName()}'s turn. Place your ${player.getSymbol()}.`
+    }
 
     // Bind Events
-    gameBoard.addEventListener("click", (outerEvent) => {
-        if (outerEvent.target.classList.contains("cell")) {
-            cellClicked(outerEvent)
+    gameControls.querySelector("#start-game").addEventListener("click", clickedStart);
+
+    gameControls.querySelector("#reset-game").addEventListener("click", clickedReset)
+
+    gameBoard.addEventListener("click", (e) => {
+        if (e.target.classList.contains("cell")) {
+            clickedCell(e)
         }
     })
 
-    gameControls.querySelector("#reset-game").addEventListener("click", resetClicked)
-
-
-    events.on("boardStateUpdated", renderBoard)
-    events.on("gameWon", renderGameWon)
+    events.on("boardUpdated", renderBoard);
+    events.on("gameStart", renderGameStart);
+    events.on("gameWon", renderGameWon);
+    events.on("gameDrawn", renderGameDrawn);
+    events.on("gameReset", renderGameReset);
+    events.on("nextPlayerUpdated", renderPlayerUpdated);
 
     // Return Object
-    return {renderBoard};
+    return {};
 })();
 
-// Player Factory
-const Player = (initialName, initialSymbol = null) => {
-    const symbol = initialSymbol ?? "X";
-    const name = initialName;
-    const getSymbol = () => symbol;
-    const getName = () => name;
 
-    return {getSymbol,
-            getName,}
+// Player Factory
+const Player = (playerName = null, symbol = null, ai = null) => {
+    playerName = playerName ?? "Player 1";
+    symbol = symbol ?? "X";
+    ai = ai ?? false;
+
+    const getSymbol = () => symbol;
+    const getName = () => playerName;
+
+    return {
+        getSymbol,
+        getName,
+    }
 }
 
+// Logic Module
+const logic = (() => {
+    // Utility Functions
+    const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
 
-// Game Factory
-const Game = (initialState = null) => {
-    let state = initialState ?? [["", "", ""],
-                                   ["", "", ""],
-                                   ["", "", ""]];
-    const p1 = Player("Player 1", "X")
-    const p2 = Player("Player 2", "O")
-
-    // Game Functions
-    const nextPlayer = () => {
-        const turnDiff = state.flat().reduce((acc, cur) => {
+    // Tic-Tac-Toe Logic
+    const player = (board, p1, p2) => {
+        turnDiff = board.flat().reduce((acc, cur) => {
             if (cur === p1.getSymbol()) {
                 return acc + 1;
             } else if (cur === p2.getSymbol()) {
@@ -144,93 +189,147 @@ const Game = (initialState = null) => {
             return p2;
         }
     }
-    
-    const availableActions = () => {
+
+    const actions = (board) => {
         const allActions = [];
 
-        for (let y = 0; y < state.length; y++) {
-            for (let x = 0; x < state[y].length; x++) {
-                const cell = state[y][x];
-                if (cell === "") {
+        for (let y = 0; y < board.length; y++) {
+            for (let x = 0; x < board[y].length; x++) {
+                const cell = board[y][x];
+                if (!cell) {
                     allActions.push([x, y])
                 }                
             }
         }
+
         return allActions;
     }
 
-    const tryAction = (coordinates) => {
-        const x = coordinates[0];
-        const y = coordinates[1];
+    const result = (board, p1, p2, action) => {
+        const x = action.x;
+        const y = action.y;
 
-        if (state[y][x] === "") {
-            state[y][x] = nextPlayer().getSymbol();
-        }
+        const newBoard = clone(board);
+        newBoard[y][x] = player(board, p1, p2).getSymbol()
 
-        events.emit("boardStateUpdated", state);
+        return newBoard
     }
 
-    const checkWinner = () => {
-
+    const winner = (board, p1, p2) => {
         let winner = null;
 
         // Check horizontals
-        for (let y=0; y<state.length; y++) {
-            const val = state[y][0];
-            if (state[y].every((cell) => cell === val) && val != ""){
+        for (let y=0; y<board.length; y++) {
+            const val = board[y][0];
+            if (board[y].every((cell) => cell === val) && val != ""){
                 winner = val;
             }
         }
 
         // Check verticals
-        for (let x=0; x<state[0].length; x++) {
-            const val = state[0][x];
-            const column = state.map((row) => row[x])
+        for (let x=0; x<board[0].length; x++) {
+            const val = board[0][x];
+            const column = board.map((row) => row[x])
             if (column.every((cell) => cell === val) && val != "") {
                 winner = val;
             }
         }
 
         // Check diagonals
-        if (state[0][0] === state[1][1] && state [0][0] === state[2][2] && state[0][0] != "") {
-            winner = state[0][0];
+        if (board[0][0] === board[1][1] && board [0][0] === board[2][2] && board[0][0] != "") {
+            winner = board[0][0];
         }
-        if (state[0][2] === state[1][1] && state[0][2] === state[2][0] && state [0][2] != "") {
-            winner = state[0][2];
+        if (board[0][2] === board[1][1] && board[0][2] === board[2][0] && board [0][2] != "") {
+            winner = board[0][2];
         }
 
         if (winner === p1.getSymbol()) {
-            events.emit("gameWon", p1)
+            return p1
         } else if (winner === p2.getSymbol()) {
-            events.emit("gameWon", p2)
+            return p2
+        } else {
+            return null
         }
     }
 
+    const terminal = (board, p1, p2) => {
+        if (winner(board, p1, p2)) {
+            return true
+        } else if (actions(board).length <= 0) {
+            return true
+        } else {
+            return false;
+        }
+    }
+
+    // AI Functions
+
+    // const minimax =
+
+    return {
+        clone,
+        result,
+        winner,
+        terminal,
+        player,
+    }
+})();
+
+
+// Game Module
+const game = (() => {
+    let board = null
+    let p1 = null
+    let p2 = null
+
+    const emptyBoard = [[null, null, null],
+                        [null, null, null],
+                        [null, null, null]];
+
+    const startGame = (data) => {
+        board = logic.clone(emptyBoard);
+        p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer);
+        p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer);
+
+        events.emit("boardUpdated", board)
+        events.emit("gameStart", "");
+        events.emit("nextPlayerUpdated", logic.player(board, p1, p2))
+    }
+
+    const resolveBoard = () => {
+        // Check if won or drawn
+        const winner = logic.winner(board, p1, p2)
+        if (winner) {
+            events.emit("gameWon", winner);
+        } else if (logic.terminal(board, p1, p2)) {
+            events.emit("gameDrawn", "");
+        }
+
+    }
+
+    const clickedCell = (cell) => {
+        if (board[cell.y][cell.x] != null) {
+            // Do nothing
+        } else {
+            board = logic.result(board, p1, p2, cell);
+        }
+
+        events.emit("boardUpdated", board);
+        events.emit("nextPlayerUpdated", logic.player(board, p1, p2));
+
+        resolveBoard();
+    }
+
     const resetGame = () => {
-        state = [["", "", ""],
-                 ["", "", ""],
-                 ["", "", ""]];
-        events.emit("boardStateUpdated", state)
+        board = logic.clone(emptyBoard);
+        events.emit("boardUpdated", board);
+        events.emit("nextPlayerUpdated", logic.player(board, p1, p2));
+        events.emit("gameReset");
     }
 
     // Bind Events
-    events.on("cellClicked", tryAction);
-    events.on("resetClicked", resetGame);
-    events.on("boardStateUpdated", checkWinner);
+    events.on("clickedStart", startGame);
+    events.on("clickedCell", clickedCell);
+    events.on("clickedReset", resetGame);
 
-    events.emit("boardStateUpdated", state);
-
-    return {nextPlayer,
-            availableActions,
-            tryAction,
-            state,};
-};
-
-
-// const a = [["","","X"], ["","O","O"], ["X","","X"]];
-
-// ui.renderBoard(a);
-
-const a = [[1,2,3], [4,5,6], [7,8,9]]
-
-const game = Game();
+})();

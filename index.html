@@ -19,16 +19,22 @@
     <div id="container-main">
         <div id="container-controls">
             <div id="game-controls">
-                <button id="start-game">Start Game</button><br><br>
-                <button id="reset-game">Reset Game</button>
                 <hr>
                 <h3>Player 1 - X</h3>
-                <button id="p1-human">Human</button>
-                <button id="p1-ai">AI</button>
+                <input type="radio" id="p1-human" name="p1" value="human" checked>
+                <label for="p1-human">Human</label><br>
+                <input type="radio" id="p1-ai" name="p1" value="ai">
+                <label for="p1-ai">AI</label><br>
                 <hr>
                 <h3>Player 2 - O</h3>
-                <button id="p2-human">Human</button>
-                <button id="p2-ai">AI</button>
+                <input type="radio" id="p2-human" name="p2" value="human" checked>
+                <label for="p2-human">Human</label><br>
+                <input type="radio" id="p2-ai" name="p2" value="ai">
+                <label for="p2-ai">AI</label><br>
+                <hr>
+                <br>
+                <button id="start-game">Start Game</button><br><br>
+                <button id="reset-game">Reset Game</button>
             </div>
         </div>
         <div id="container-spacer">
