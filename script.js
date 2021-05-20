@@ -45,6 +45,8 @@ const ui = (() => {
     const playerSettingsButtons = gameControls.querySelectorAll("input[type='radio']", "input[type='radio']+label")
     const resetGameButton = gameControls.querySelector("#reset-game");
 
+    const canvas = document.querySelector("#canvas");
+
     // UI Functions
     const clearBoard = () => {
         while (gameBoard.firstChild) {
@@ -98,6 +100,36 @@ const ui = (() => {
         });
     }
 
+    const drawLine = (ctx, begin, end, stroke="black", width=1) => {
+        // Using canvas. Ref: https://www.javascripttutorial.net/web-apis/javascript-draw-line/
+        if (stroke) {
+            ctx.strokeStyle = stroke;
+        }
+
+        if (width) {
+            ctx.lineWidth = width;
+        }
+
+        ctx.beginPath();
+        ctx.moveTo(...begin);
+        ctx.lineTo(...end);
+        ctx.stroke();
+    }
+
+    const clearCanvas = () => {
+        const context = canvas.getContext("2d");
+        context.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const renderWinningPosition = (points) => {
+        const start = [(points[0][0] * 100 + 50), (points[0][1] * 100 + 50)]
+        const end = [(points[1][0] * 100 + 50), (points[1][1] * 100 + 50)]
+        const context = canvas.getContext("2d");
+
+        drawLine(context, start, end, stroke="black", width=5);
+        canvas.style.display = "block";
+    }
+
     const renderGameStart = () => {
         alertText.textContent = ""
         playerSettingsButtons.forEach((element) => element.setAttribute("disabled", ""));
@@ -105,9 +137,10 @@ const ui = (() => {
         resetGameButton.removeAttribute("disabled");
     }
 
-    const renderGameWon = (player) => {
+    const renderGameWon = (data) => {
         disableBoard();
-        alertText.textContent = `${player.getName()} wins!`;
+        alertText.textContent = `${data.player.getName()} wins!`;
+        renderWinningPosition (data.points);
     }
 
     const renderGameDrawn = () => {
@@ -122,12 +155,15 @@ const ui = (() => {
         playerSettingsButtons.forEach((element) => element.removeAttribute("disabled"));
         startGameButton.removeAttribute("disabled");
         resetGameButton.setAttribute("disabled", "");
+
+        clearCanvas();
+        canvas.style.display = "none";
     }
 
     const renderPlayerUpdated = (player) => {
         alertText.textContent = `${player.getName()}'s turn. Place your ${player.getSymbol()}.`
     }
-
+    
     // Bind Events
     gameControls.querySelector("#start-game").addEventListener("click", clickedStart);
 
@@ -216,13 +252,15 @@ const logic = (() => {
     }
 
     const winner = (board, p1, p2) => {
-        let winner = null;
+        let winningSymbol = null;
+        let winningPoints = null;
 
         // Check horizontals
         for (let y=0; y<board.length; y++) {
             const val = board[y][0];
-            if (board[y].every((cell) => cell === val) && val != ""){
-                winner = val;
+            if (board[y].every((cell) => cell === val) && val != null){
+                winningSymbol = val;
+                winningPoints = [[0,y],[2,y]]
             }
         }
 
@@ -230,23 +268,26 @@ const logic = (() => {
         for (let x=0; x<board[0].length; x++) {
             const val = board[0][x];
             const column = board.map((row) => row[x])
-            if (column.every((cell) => cell === val) && val != "") {
-                winner = val;
+            if (column.every((cell) => cell === val) && val != null) {
+                winningSymbol = val;
+                winningPoints = [[x,0],[x,2]]
             }
         }
 
         // Check diagonals
-        if (board[0][0] === board[1][1] && board [0][0] === board[2][2] && board[0][0] != "") {
-            winner = board[0][0];
+        if (board[0][0] === board[1][1] && board [0][0] === board[2][2] && board[0][0] != null) {
+            winningSymbol = board[0][0];
+            winningPoints = [[0,0], [2,2]];
         }
-        if (board[0][2] === board[1][1] && board[0][2] === board[2][0] && board [0][2] != "") {
-            winner = board[0][2];
+        if (board[0][2] === board[1][1] && board[0][2] === board[2][0] && board [0][2] != null) {
+            winningSymbol = board[0][2];
+            winningPoints = [[0,2], [2,0]];
         }
 
-        if (winner === p1.getSymbol()) {
-            return p1
-        } else if (winner === p2.getSymbol()) {
-            return p2
+        if (winningSymbol === p1.getSymbol()) {
+            return {player: p1, points: winningPoints};
+        } else if (winningSymbol === p2.getSymbol()) {
+            return {player: p2, points: winningPoints};
         } else {
             return null
         }
@@ -298,9 +339,9 @@ const game = (() => {
 
     const resolveBoard = () => {
         // Check if won or drawn
-        const winner = logic.winner(board, p1, p2)
-        if (winner) {
-            events.emit("gameWon", winner);
+        const data = logic.winner(board, p1, p2)
+        if (data) {
+            events.emit("gameWon", data);
         } else if (logic.terminal(board, p1, p2)) {
             events.emit("gameDrawn", "");
         }
@@ -333,3 +374,15 @@ const game = (() => {
     events.on("clickedReset", resetGame);
 
 })();
+
+
+// Make responsive
+// Add AI
+// Do canvas drawing line on finish
+// Make AI click button change to other type of player (human -> ai, etc)
+// Improve symbol layout stuff (sizing, options, etc)
+// Do button click animation
+// add grid borders
+// pretyfy colours
+// sort out pubsub function with more than one arg
+// handle simultaneous wins

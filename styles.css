@@ -45,3 +45,13 @@ header {
     background-color: lightgoldenrodyellow;
     margin-top: 20px;
 }
+
+#container-canvas {
+    position: relative;
+    top: -300px;
+}
+
+#canvas {
+    display: none;
+    position: absolute;
+}
