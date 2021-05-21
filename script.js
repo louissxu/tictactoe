@@ -79,13 +79,29 @@ const ui = (() => {
     }
 
     const clickedStart = (e) => {
+        // Cache DOM
+        p1Name = gameControls.querySelector("#p1-name")
+        p1Symbol = gameControls.querySelector("#p1-symbol")
+        p1Computer= gameControls.querySelector("input[name='p1']:checked")  // Ref: https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
+        p2Name= gameControls.querySelector("#p2-name")
+        p2Symbol= gameControls.querySelector("#p2-symbol")
+        p2Computer= gameControls.querySelector("input[name='p2']:checked")
+
+        // Fill default values if nothing entered
+        p1NameVal = String(p1Name.value) || "Player 1";
+        p1SymbolVal = String(p1Symbol.value) || "X";
+        p1ComputerVal = String(p1Computer.value) || "human";
+        p2NameVal = String(p2Name.value) || "Player 2";
+        p2SymbolVal = String(p2Symbol.value) || "O";
+        p2ComputerVal = String(p2Computer.value) || "human";
+
         events.emit("clickedStart", {
-            p1Name: "Player 1",
-            p1Symbol: "X",
-            p1Computer: gameControls.querySelector("input[name='p1']:checked").value,  // Ref: https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
-            p2Name: "Player 2",
-            p2Symbol: "O",
-            p2Computer: gameControls.querySelector("input[name='p2']:checked").value,
+            p1Name: p1NameVal,
+            p1Symbol: p1SymbolVal,
+            p1Computer: p1ComputerVal,
+            p2Name: p2NameVal,
+            p2Symbol: p2SymbolVal,
+            p2Computer: p2ComputerVal,
         });
     }
 
@@ -350,8 +366,8 @@ const logic = (() => {
 // Game Module
 const game = (() => {
     let board = null
-    let p1 = null
-    let p2 = null
+    let p1 = Player()
+    let p2 = Player()
 
     const emptyBoard = [[null, null, null],
                         [null, null, null],
@@ -403,14 +419,19 @@ const game = (() => {
     events.on("clickedCell", clickedCell);
     events.on("clickedReset", resetGame);
 
+    // Initialize in reset state
+    resetGame();
+
 })();
 
 
 // Make responsive
 // Add AI
 // Make AI click button change to other type of player (human -> ai, etc) even if mid game
-// Improve symbol layout stuff (sizing, options, etc)
 // Do button click animation
-// pretyfy colours
+// pretyfy colours and css (select boxes, headings, fonts)
 // sort out pubsub function with more than one arg
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
+// Restyle winning line thing (make translucent, less dominating visually)
+// Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
+// Make "random" button that auto picks some emojis and fills in random player names

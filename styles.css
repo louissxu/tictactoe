@@ -1,6 +1,7 @@
 .cell {
     background-color: whitesmoke;
     border: none;
+    font-size: 40px;
 }
 
 header {
@@ -57,4 +58,14 @@ header {
 #canvas {
     display: none;
     position: absolute;
+}
+
+.player-heading {
+    font-size: 16px;
+    padding: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border: 0;
+    border-bottom: 1px solid #eee;
+    background-color: lightseagreen;
 }
