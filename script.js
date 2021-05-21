@@ -121,12 +121,30 @@ const ui = (() => {
         context.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    const renderWinningPosition = (points) => {
-        const start = [(points[0][0] * 100 + 50), (points[0][1] * 100 + 50)]
-        const end = [(points[1][0] * 100 + 50), (points[1][1] * 100 + 50)]
+    const renderWinningPosition = (pairs) => {
+
+        // Geometric transforms
+        // Scales up to display grid size
+        const scaledPairs = pairs.map(([[ax, ay], [bx, by]]) => [[ax*100, ay*100], [bx*100, by*100]]);
+        // Moves origin so it is centred on grid
+        const shiftedPairs = scaledPairs.map(([[ax, ay], [bx, by]]) => [[ax+50, ay+50], [bx+50, by+50]]);
+        // Vector scales to "extend" the line past the centre of the squares
+        const vectorScaledPairs = shiftedPairs.map(([[ax, ay], [bx, by]]) => {
+            // Centre between both points
+            const cx = ax + (0.5*(-ax + bx));
+            const cy = ay + (0.5*(-ay + by));
+            
+            // Return scaled vector from the centre (ie extends the line 10% either way)
+            return [[cx + (1.2*(-cx + ax)), cy + (1.2*(-cy + ay))], [cx + (1.2*(-cx + bx)), cy + (1.2*(-cy + by))]]
+        })
+
         const context = canvas.getContext("2d");
 
-        drawLine(context, start, end, stroke="black", width=5);
+        vectorScaledPairs.forEach(([start, end]) => {
+            drawLine(context, start, end, stroke="black", width=5);
+        })
+
+        // drawLine(context, start, end, stroke="black", width=5);
         canvas.style.display = "block";
     }
 
@@ -140,7 +158,7 @@ const ui = (() => {
     const renderGameWon = (data) => {
         disableBoard();
         alertText.textContent = `${data.player.getName()} wins!`;
-        renderWinningPosition (data.points);
+        renderWinningPosition (data.pairs);
     }
 
     const renderGameDrawn = () => {
@@ -253,14 +271,14 @@ const logic = (() => {
 
     const winner = (board, p1, p2) => {
         let winningSymbol = null;
-        let winningPoints = null;
+        let winningPairs = [];
 
         // Check horizontals
         for (let y=0; y<board.length; y++) {
             const val = board[y][0];
             if (board[y].every((cell) => cell === val) && val != null){
                 winningSymbol = val;
-                winningPoints = [[0,y],[2,y]]
+                winningPairs.push([[0,y],[2,y]]);
             }
         }
 
@@ -270,24 +288,24 @@ const logic = (() => {
             const column = board.map((row) => row[x])
             if (column.every((cell) => cell === val) && val != null) {
                 winningSymbol = val;
-                winningPoints = [[x,0],[x,2]]
+                winningPairs.push([[x,0],[x,2]]);
             }
         }
 
         // Check diagonals
         if (board[0][0] === board[1][1] && board [0][0] === board[2][2] && board[0][0] != null) {
             winningSymbol = board[0][0];
-            winningPoints = [[0,0], [2,2]];
+            winningPairs.push([[0,0], [2,2]]);
         }
         if (board[0][2] === board[1][1] && board[0][2] === board[2][0] && board [0][2] != null) {
             winningSymbol = board[0][2];
-            winningPoints = [[0,2], [2,0]];
+            winningPairs.push([[0,2], [2,0]]);
         }
 
         if (winningSymbol === p1.getSymbol()) {
-            return {player: p1, points: winningPoints};
+            return {player: p1, pairs: winningPairs};
         } else if (winningSymbol === p2.getSymbol()) {
-            return {player: p2, points: winningPoints};
+            return {player: p2, pairs: winningPairs};
         } else {
             return null
         }
@@ -378,11 +396,11 @@ const game = (() => {
 
 // Make responsive
 // Add AI
-// Do canvas drawing line on finish
-// Make AI click button change to other type of player (human -> ai, etc)
+// Make AI click button change to other type of player (human -> ai, etc) even if mid game
 // Improve symbol layout stuff (sizing, options, etc)
 // Do button click animation
 // add grid borders
 // pretyfy colours
 // sort out pubsub function with more than one arg
-// handle simultaneous wins
+// handle simultaneous wins for canvas draw line
+// maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
