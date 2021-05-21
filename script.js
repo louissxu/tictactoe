@@ -411,7 +411,6 @@ const game = (() => {
 // Make AI click button change to other type of player (human -> ai, etc) even if mid game
 // Improve symbol layout stuff (sizing, options, etc)
 // Do button click animation
-// add grid borders
 // pretyfy colours
 // sort out pubsub function with more than one arg
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such

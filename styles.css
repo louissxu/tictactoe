@@ -1,6 +1,6 @@
 .cell {
-    /* width: 100px;
-    height: 100px; */
+    background-color: whitesmoke;
+    border: none;
 }
 
 header {
@@ -38,6 +38,9 @@ header {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
+    
+    grid-gap: 3px;
+    background-color: black;
 }
 
 #game-alerts {
