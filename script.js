@@ -130,12 +130,27 @@ const ui = (() => {
         const shiftedPairs = scaledPairs.map(([[ax, ay], [bx, by]]) => [[ax+50, ay+50], [bx+50, by+50]]);
         // Vector scales to "extend" the line past the centre of the squares
         const vectorScaledPairs = shiftedPairs.map(([[ax, ay], [bx, by]]) => {
-            // Centre between both points
-            const cx = ax + (0.5*(-ax + bx));
-            const cy = ay + (0.5*(-ay + by));
+            // // Centre between both points
+            // const cx = ax + (0.5*(-ax + bx));
+            // const cy = ay + (0.5*(-ay + by));
             
-            // Return scaled vector from the centre (ie extends the line 10% either way)
-            return [[cx + (1.2*(-cx + ax)), cy + (1.2*(-cy + ay))], [cx + (1.2*(-cx + bx)), cy + (1.2*(-cy + by))]]
+            // // Return scaled vector from the centre (ie extends the line 10% either way)
+            // return [[cx + (1.2*(-cx + ax)), cy + (1.2*(-cy + ay))], [cx + (1.2*(-cx + bx)), cy + (1.2*(-cy + by))]]
+
+            // Vector from a -> b
+            const vx = -ax + bx;
+            const vy = -ay + by;
+
+            // Length of V (ie. |a->b|)
+            const vLength = Math.sqrt(vx**2 + vy**2);
+
+            // Unit vector from a -> b of 1 pixel length (ie. v / |v|)
+            const ux = vx / vLength;
+            const uy = vy / vLength;
+            
+            // Return pairs projected out an extra 20 pixels length in the unit vector direction
+            // ie a = a-20*u and b=b+20*u
+            return [[ax-20*ux, ay-20*uy], [bx+20*ux, by+20*uy]]
         })
 
         const context = canvas.getContext("2d");
