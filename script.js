@@ -122,7 +122,6 @@ const ui = (() => {
     }
 
     const renderWinningPosition = (pairs) => {
-
         // Geometric transforms
         // Scales up to display grid size
         const scaledPairs = pairs.map(([[ax, ay], [bx, by]]) => [[ax*100, ay*100], [bx*100, by*100]]);
@@ -153,13 +152,11 @@ const ui = (() => {
             return [[ax-20*ux, ay-20*uy], [bx+20*ux, by+20*uy]]
         })
 
+        // Draw line for each winning position
         const context = canvas.getContext("2d");
-
         vectorScaledPairs.forEach(([start, end]) => {
             drawLine(context, start, end, stroke="black", width=5);
         })
-
-        // drawLine(context, start, end, stroke="black", width=5);
         canvas.style.display = "block";
     }
 
@@ -417,5 +414,4 @@ const game = (() => {
 // add grid borders
 // pretyfy colours
 // sort out pubsub function with more than one arg
-// handle simultaneous wins for canvas draw line
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
