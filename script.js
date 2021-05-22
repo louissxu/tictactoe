@@ -237,14 +237,16 @@ const ui = (() => {
 const Player = (playerName = null, symbol = null, ai = null) => {
     playerName = playerName ?? "Player 1";
     symbol = symbol ?? "X";
-    ai = ai ?? false;
+    ai = ai ?? "human";
 
     const getSymbol = () => symbol;
     const getName = () => playerName;
+    const isAi = () => ai == "ai" ? true : false;
 
     return {
         getSymbol,
         getName,
+        isAi,
     }
 }
 
@@ -471,14 +473,24 @@ const game = (() => {
     const resetGame = () => {
         board = logic.clone(emptyBoard);
         events.emit("boardUpdated", board);
-        events.emit("nextPlayerUpdated", logic.player(board, p1, p2));
         events.emit("gameReset");
+    }
+
+    const checkForAiMove = (data) => {
+        const nextPlayer = logic.player(board, p1, p2)
+        if (!logic.terminal(board, p1, p2)){
+            if (nextPlayer.isAi() === true) {
+                const bestMove = logic.minimax(board, p1, p2);
+                events.emit("clickedCell", bestMove);
+            }
+        }
     }
 
     // Bind Events
     events.on("clickedStart", startGame);
     events.on("clickedCell", clickedCell);
     events.on("clickedReset", resetGame);
+    events.on("nextPlayerUpdated", checkForAiMove);
 
     // Initialize in reset state
     resetGame();
