@@ -384,10 +384,22 @@ const logic = (() => {
         return value;
     }
 
+    const shuffled = (array) => {
+        // Ref: https://bost.ocks.org/mike/shuffle/compare.html
+        // Fisher-Yates shuffle (but not in-place)
+        const newArray = [...array];
+        for (let i = newArray.length-1; i >= 0; i--){
+            let j = Math.floor(Math.random() * (i+1))
+            let temp = newArray[j];
+            newArray[j] = newArray[i];
+            newArray[i] = temp;
+        }
+        return newArray
+    }
 
     const minimax = (board, p1, p2) => {
         const nextPlayer = player(board, p1, p2);
-        const availableActions = actions(board)
+        const availableActions = shuffled(actions(board))
         if (nextPlayer === p1) {
             const best_action = availableActions.reduce((prev, cur) => {
                 return utility(result(board, p1, p2, prev), p1, p2) > minValue(result(board, p1, p2, cur), p1, p2) ? prev : cur;
