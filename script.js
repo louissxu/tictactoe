@@ -110,10 +110,10 @@ const ui = (() => {
     }
 
     const clickedCell = (e) => {
-        events.emit("clickedCell", {
-            x: e.target.getAttribute("data-x-coordinate"),
-            y: e.target.getAttribute("data-y-coordinate")
-        });
+        events.emit("clickedCell", [
+            e.target.getAttribute("data-x-coordinate"),
+            e.target.getAttribute("data-y-coordinate")
+        ]);
     }
 
     const drawLine = (ctx, begin, end, stroke="black", width=1) => {
@@ -288,8 +288,8 @@ const logic = (() => {
     }
 
     const result = (board, p1, p2, action) => {
-        const x = action.x;
-        const y = action.y;
+        const x = action[0];
+        const y = action[1];
 
         const newBoard = clone(board);
         newBoard[y][x] = player(board, p1, p2).getSymbol()
@@ -350,8 +350,56 @@ const logic = (() => {
     }
 
     // AI Functions
+    const utility = (board, p1, p2) => {
+        const data = winner(board, p1, p2) ?? ""
+        const winningPlayer= data.player ?? ""
+        if (winningPlayer === p1) {
+            return 1;
+        } else if (winningPlayer === p2) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 
-    // const minimax =
+    const maxValue = (board, p1, p2) => {
+        let value = -1;
+        if (terminal(board, p1, p2)) {
+            return utility(board, p1, p2);
+        }
+        actions(board).forEach(action => {
+            value = Math.max(value, minValue(result(board, p1, p2, action), p1, p2))
+        })
+        return value;
+    }
+
+    const minValue = (board, p1, p2) => {
+        let value = 1;
+        if (terminal(board, p1, p2)) {
+            return utility(board, p1, p2);
+        }
+        actions(board).forEach(action => {
+            value = Math.min(value, maxValue(result(board, p1, p2, action), p1, p2))
+        })
+        return value;
+    }
+
+
+    const minimax = (board, p1, p2) => {
+        const nextPlayer = player(board, p1, p2);
+        const availableActions = actions(board)
+        if (nextPlayer === p1) {
+            const best_action = availableActions.reduce((prev, cur) => {
+                return utility(result(board, p1, p2, prev), p1, p2) > minValue(result(board, p1, p2, cur), p1, p2) ? prev : cur;
+            }, availableActions[0])
+            return best_action;
+        } else {
+            const best_action = availableActions.reduce((prev, cur) => {
+                return utility(result(board, p1, p2, prev), p1, p2) < maxValue(result(board, p1, p2, cur), p1, p2) ? prev : cur;
+            }, availableActions[0])
+            return best_action;
+        }
+    }
 
     return {
         clone,
@@ -359,6 +407,8 @@ const logic = (() => {
         winner,
         terminal,
         player,
+        utility,
+        minimax,
     }
 })();
 
@@ -395,12 +445,11 @@ const game = (() => {
     }
 
     const clickedCell = (cell) => {
-        if (board[cell.y][cell.x] != null) {
+        if (board[cell[1]][cell[0]] != null) {
             // Do nothing
         } else {
             board = logic.result(board, p1, p2, cell);
         }
-
         events.emit("boardUpdated", board);
         events.emit("nextPlayerUpdated", logic.player(board, p1, p2));
 
