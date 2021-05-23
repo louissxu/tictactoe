@@ -37,7 +37,7 @@ header {
 
 .game-controls-cell {
     /* width: 200px; */
-    margin: 5px;
+    margin: 5px auto 5px auto;
     padding: 10px;
     min-width: 150px;
 
@@ -45,6 +45,13 @@ header {
     border: 1px solid red;
 
     flex-grow: 1;
+}
+
+.subcell {
+    max-width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: green;
 }
 
 #container-board {
@@ -95,4 +102,12 @@ header {
 
 h3 {
     margin: 0px;
+}
+
+button {
+    width: 100px;
+}
+
+.button-subcell {
+    text-align: center;
 }
