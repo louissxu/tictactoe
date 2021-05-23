@@ -20,10 +20,10 @@ const events = (() => {
         }
     }
 
-    const emit = (eventName, data) => {
+    const emit = (eventName, ...dataArgs) => {
         if (events[eventName]) {
             events[eventName].forEach((fn) => {
-                fn(data);
+                fn(...dataArgs);
             });
         }
     }
@@ -497,12 +497,8 @@ const game = (() => {
 
 })();
 
-
-// Make responsive
-// Make AI click button change to other type of player (human -> ai, etc) even if mid game
 // Do button click animation
 // pretyfy colours and css (select boxes, headings, fonts)
-// sort out pubsub function with more than one arg
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
 // change functions to pass around state rather than board, p1, p2
 // Restyle winning line thing (make translucent, less dominating visually)
