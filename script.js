@@ -42,7 +42,7 @@ const ui = (() => {
     const alertText = document.querySelector("#alert-text");
 
     const startGameButton = gameControls.querySelector("#start-game");
-    const playerSettingsButtons = gameControls.querySelectorAll("input[type='radio']", "input[type='radio']+label")
+    const playerSettingsButtons = gameControls.querySelectorAll("input, select, input[type='radio']+label")
     const resetGameButton = gameControls.querySelector("#reset-game");
 
     const canvas = document.querySelector("#canvas");
@@ -499,12 +499,13 @@ const game = (() => {
 
 
 // Make responsive
-// Add AI
 // Make AI click button change to other type of player (human -> ai, etc) even if mid game
 // Do button click animation
 // pretyfy colours and css (select boxes, headings, fonts)
 // sort out pubsub function with more than one arg
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
+// change functions to pass around state rather than board, p1, p2
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
 // Make "random" button that auto picks some emojis and fills in random player names
+// Add alpha beta pruning

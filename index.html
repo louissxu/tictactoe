@@ -19,39 +19,41 @@
     <div id="container-main">
         <div id="container-controls">
             <div id="game-controls">
-                <hr>
-                <input class="player-heading" type="text" id="p1-name" name="p1-name" size=10 placeholder="Player 1"> - 
-                <select class="player-heading" id="p1-symbol" name="p1-symbol"><br>
-                    <option value="X">X</option>
-                    <option value="❌">❌</option>
-                    <option value="⚔️">⚔️</option>
-                    <option value="🍫">🍫</option>
-                    <option value="🧑">🧑</option>
-                </select>
-                <input type="radio" id="p1-human" name="p1" value="human" checked>
-                <label for="p1-human">Human</label><br>
-                <input type="radio" id="p1-ai" name="p1" value="ai">
-                <label for="p1-ai">AI</label><br>
-                <hr>
-                <input class="player-heading" type="text" id="p2-name" name="p2-name" size=10 placeholder="Player 2"> - 
-                <select class="player-heading" type="text" id="p2-symbol"><br>
-                    <option value="O">O</option>
-                    <option value="⭕">⭕</option>
-                    <option value="🛡️">🛡️</option>
-                    <option value="🍩">🍩</option>
-                    <option value="🤖">🤖</option>
-                </select>
-                <input type="radio" id="p2-human" name="p2" value="human" checked>
-                <label for="p2-human">Human</label><br>
-                <input type="radio" id="p2-ai" name="p2" value="ai">
-                <label for="p2-ai">AI</label><br>
-                <hr>
-                <br>
-                <button id="start-game">Start Game</button><br><br>
-                <button id="reset-game">Reset Game</button>
+                <div class="game-controls-cell">
+                    <h3>Player 1</h3>
+                    <input class="player-input-field" type="text" id="p1-name" name="p1-name" size=10 placeholder="Player 1's name"> - 
+                    <select class="player-input-field" id="p1-symbol" name="p1-symbol"><br>
+                        <option value="X">X</option>
+                        <option value="❌">❌</option>
+                        <option value="⚔️">⚔️</option>
+                        <option value="🍫">🍫</option>
+                        <option value="🧑">🧑</option>
+                    </select><br>
+                    <input type="radio" id="p1-human" name="p1" value="human" checked>
+                    <label for="p1-human">Human</label><br>
+                    <input type="radio" id="p1-ai" name="p1" value="ai">
+                    <label for="p1-ai">AI</label><br>
+                </div>
+                <div class="game-controls-cell">
+                    <h3>Player 2</h3> 
+                    <input class="player-input-field" type="text" id="p2-name" name="p2-name" size=10 placeholder="Player 2's name"> - 
+                    <select class="player-input-field" type="text" id="p2-symbol"><br>
+                        <option value="O">O</option>
+                        <option value="⭕">⭕</option>
+                        <option value="🛡️">🛡️</option>
+                        <option value="🍩">🍩</option>
+                        <option value="🤖">🤖</option>
+                    </select><br>
+                    <input type="radio" id="p2-human" name="p2" value="human" checked>
+                    <label for="p2-human">Human</label><br>
+                    <input type="radio" id="p2-ai" name="p2" value="ai">
+                    <label for="p2-ai">AI</label><br>
+                </div>
+                <div class="game-controls-cell">
+                    <button id="start-game">Start Game</button><br><br>
+                    <button id="reset-game">Reset Game</button>
+                </div>
             </div>
-        </div>
-        <div id="container-spacer">
         </div>
         <div id="container-board">
             <div id="game-board">
