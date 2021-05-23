@@ -476,12 +476,12 @@ const game = (() => {
         events.emit("gameReset");
     }
 
-    const checkForAiMove = (data) => {
+    const checkForAiMove = (_) => {
         const nextPlayer = logic.player(board, p1, p2)
         if (!logic.terminal(board, p1, p2)){
             if (nextPlayer.isAi() === true) {
                 const bestMove = logic.minimax(board, p1, p2);
-                events.emit("clickedCell", bestMove);
+                setTimeout(() => {events.emit("clickedCell", bestMove)}, 200);
             }
         }
     }

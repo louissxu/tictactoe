@@ -1,7 +1,22 @@
 .cell {
-    background-color: whitesmoke;
+    background-color: #F8F8F8;
     border: none;
     font-size: 40px;
+    text-align: center;
+
+    transition-duration: 0.2s;
+}
+
+.cell:disabled {
+    background-color: #E0E0E0;
+}
+
+.cell:hover:enabled {
+    background-color: #E0E0E0;
+}
+
+.cell:active:enabled {
+    scale: 1.1;
 }
 
 header {
@@ -76,7 +91,7 @@ header {
     grid-template-rows: 1fr 1fr 1fr;
     
     grid-gap: 3px;
-    background-color: black;
+    background-color: gray;
 }
 
 #game-alerts {
