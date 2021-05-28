@@ -354,7 +354,7 @@ const logic = (() => {
     // AI Functions
     const utility = (board, p1, p2) => {
         const data = winner(board, p1, p2) ?? ""
-        const winningPlayer= data.player ?? ""
+        const winningPlayer = data.player ?? ""
         if (winningPlayer === p1) {
             return 1;
         } else if (winningPlayer === p2) {
@@ -365,25 +365,28 @@ const logic = (() => {
     }
 
     const maxValue = (board, p1, p2) => {
-        let value = -1;
         if (terminal(board, p1, p2)) {
             return utility(board, p1, p2);
         }
-        actions(board).forEach(action => {
-            value = Math.max(value, minValue(result(board, p1, p2, action), p1, p2))
-        })
+        let value = -1;
+        const allActions = actions(board);
+        for (let i = 0; i < allActions.length; i++) {
+            value = Math.max(value, minValue(result(board, p1, p2, allActions[i]), p1, p2))
+        }
         return value;
     }
 
     const minValue = (board, p1, p2) => {
-        let value = 1;
+
         if (terminal(board, p1, p2)) {
             return utility(board, p1, p2);
         }
-        actions(board).forEach(action => {
-            value = Math.min(value, maxValue(result(board, p1, p2, action), p1, p2))
-        })
-        return value;
+        let value = 1;
+        const allActions = actions(board);
+        for (let i = 0; i < allActions.length; i++) {
+            value = Math.min(value, maxValue(result(board, p1, p2, allActions[i]), p1, p2))
+        }
+        return value
     }
 
     const shuffled = (array) => {
@@ -398,20 +401,26 @@ const logic = (() => {
         }
         return newArray
     }
-
     const minimax = (board, p1, p2) => {
         const nextPlayer = player(board, p1, p2);
         const availableActions = shuffled(actions(board))
         if (nextPlayer === p1) {
-            const best_action = availableActions.reduce((prev, cur) => {
-                return utility(result(board, p1, p2, prev), p1, p2) > minValue(result(board, p1, p2, cur), p1, p2) ? prev : cur;
-            }, availableActions[0])
-            return best_action;
+            let bestAction = availableActions.pop();
+            let value = utility(result(board, p1, p2, bestAction), p1, p2);
+            for (let i = 0; i < availableActions.length; i++) {
+                if (minValue(result(board, p1, p2, availableActions[i]), p1, p2) > minValue(result(board, p1, p2, bestAction), p1, p2)) {
+                    bestAction = availableActions[i];
+                }
+            }
+            return bestAction;
         } else {
-            const best_action = availableActions.reduce((prev, cur) => {
-                return utility(result(board, p1, p2, prev), p1, p2) < maxValue(result(board, p1, p2, cur), p1, p2) ? prev : cur;
-            }, availableActions[0])
-            return best_action;
+            let bestAction = availableActions.pop();
+            for (let i = 0; i < availableActions.length; i++) {
+                if (maxValue(result(board, p1, p2, availableActions[i]), p1, p2) < maxValue(result(board, p1, p2, bestAction), p1, p2)) {
+                    bestAction = availableActions[i];
+                }
+            }
+            return bestAction;
         }
     }
 
