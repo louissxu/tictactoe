@@ -364,27 +364,28 @@ const logic = (() => {
         }
     }
 
-    const maxValue = (board, p1, p2) => {
+    const maxValue = (board, p1, p2, counter) => {
+        counter[0] += 1;
         if (terminal(board, p1, p2)) {
             return utility(board, p1, p2);
         }
         let value = -1;
         const allActions = actions(board);
         for (let i = 0; i < allActions.length; i++) {
-            value = Math.max(value, minValue(result(board, p1, p2, allActions[i]), p1, p2))
+            value = Math.max(value, minValue(result(board, p1, p2, allActions[i]), p1, p2, counter))
         }
         return value;
     }
 
-    const minValue = (board, p1, p2) => {
-
+    const minValue = (board, p1, p2, counter) => {
+        counter[0] += 1;
         if (terminal(board, p1, p2)) {
             return utility(board, p1, p2);
         }
         let value = 1;
         const allActions = actions(board);
         for (let i = 0; i < allActions.length; i++) {
-            value = Math.min(value, maxValue(result(board, p1, p2, allActions[i]), p1, p2))
+            value = Math.min(value, maxValue(result(board, p1, p2, allActions[i]), p1, p2, counter))
         }
         return value
     }
@@ -405,21 +406,30 @@ const logic = (() => {
         const nextPlayer = player(board, p1, p2);
         const availableActions = shuffled(actions(board))
         if (nextPlayer === p1) {
+            const counter = [0]
             let bestAction = availableActions.pop();
-            let value = utility(result(board, p1, p2, bestAction), p1, p2);
+            let value = minValue(result(board, p1, p2, bestAction), p1, p2, counter);
             for (let i = 0; i < availableActions.length; i++) {
-                if (minValue(result(board, p1, p2, availableActions[i]), p1, p2) > minValue(result(board, p1, p2, bestAction), p1, p2)) {
+                const newValue = minValue(result(board, p1, p2, availableActions[i]), p1, p2, counter);
+                if (newValue > value) {
                     bestAction = availableActions[i];
+                    value = newValue;
                 }
             }
+            console.log(counter[0]);
             return bestAction;
         } else {
+            const counter = [0]
             let bestAction = availableActions.pop();
+            let value = maxValue(result(board, p1, p2, bestAction), p1, p2, counter);
             for (let i = 0; i < availableActions.length; i++) {
-                if (maxValue(result(board, p1, p2, availableActions[i]), p1, p2) < maxValue(result(board, p1, p2, bestAction), p1, p2)) {
+                const newValue = maxValue(result(board, p1, p2, availableActions[i]), p1, p2, counter);
+                if (newValue < value) {
                     bestAction = availableActions[i];
+                    value = newValue;
                 }
             }
+            console.log(counter[0]);
             return bestAction;
         }
     }
