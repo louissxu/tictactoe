@@ -54,8 +54,9 @@ const ui = (() => {
         }
     }
 
-    const renderBoard = (board) => {
+    const renderBoard = (state) => {
         clearBoard();
+        const board = state.board.getBoard();
 
         for (let y = 0; y < board.length; y++) {
             for (let x=0; x < board[y].length; x++) {
@@ -250,17 +251,51 @@ const Player = (playerName = null, symbol = null, ai = null) => {
     }
 }
 
+// Board Factory
+const Board = (board = null) => {
+    if (board) {
+        board = logic.clone(board)
+    } else {
+        board = [[null, null, null],
+                [null, null, null],
+                [null, null, null]]
+    }
+    
+    const getBoard = () => board;
+
+    const setCell = (coord, val) => {
+        const x = coord[0];
+        const y = coord[1];
+        board[y][x] = val;
+    }
+
+    return {
+        getBoard,
+        setCell,
+        board // Temp so i can view the board value itself
+    }
+}
+
+// State Factory
+const State = (board, p1, p2) => {
+    return {
+        board,
+        p1,
+        p2,
+    }
+}
+
 // Logic Module
 const logic = (() => {
     // Utility Functions
     const clone = (items) => items.map(item => Array.isArray(item) ? clone(item) : item);
 
     // Tic-Tac-Toe Logic
-    const player = (board, p1, p2) => {
-        turnDiff = board.flat().reduce((acc, cur) => {
-            if (cur === p1.getSymbol()) {
+    const player = (state) => {
+        turnDiff = state.board.getBoard().flat().reduce((acc, cur) => {
+            if (cur === state.p1.getSymbol()) {
                 return acc + 1;
-            } else if (cur === p2.getSymbol()) {
+            } else if (cur === state.p2.getSymbol()) {
                 return acc - 1;
             } else {
                 return acc;
@@ -268,18 +303,18 @@ const logic = (() => {
         }, 0);
 
         if (turnDiff <= 0) {
-            return p1;
+            return state.p1;
         } else {
-            return p2;
+            return state.p2;
         }
     }
 
-    const actions = (board) => {
+    const actions = (state) => {
         const allActions = [];
 
-        for (let y = 0; y < board.length; y++) {
-            for (let x = 0; x < board[y].length; x++) {
-                const cell = board[y][x];
+        for (let y = 0; y < state.board.getBoard().length; y++) {
+            for (let x = 0; x < state.board.getBoard()[y].length; x++) {
+                const cell = state.board.getBoard()[y][x];
                 if (!cell) {
                     allActions.push([x, y])
                 }                
@@ -289,19 +324,21 @@ const logic = (() => {
         return allActions;
     }
 
-    const result = (board, p1, p2, action) => {
+    const result = (state, action) => {
         const x = action[0];
         const y = action[1];
 
-        const newBoard = clone(board);
-        newBoard[y][x] = player(board, p1, p2).getSymbol()
+        const newBoard = Board(state.board.getBoard());
+        newBoard.setCell(action, player(state).getSymbol())
 
-        return newBoard
+        return State(newBoard, state.p1, state.p2);
     }
 
-    const winner = (board, p1, p2) => {
+    const winner = (state) => {
         let winningSymbol = null;
         let winningPairs = [];
+
+        const board = state.board.getBoard();
 
         // Check horizontals
         for (let y=0; y<board.length; y++) {
@@ -332,19 +369,19 @@ const logic = (() => {
             winningPairs.push([[0,2], [2,0]]);
         }
 
-        if (winningSymbol === p1.getSymbol()) {
-            return {player: p1, pairs: winningPairs};
-        } else if (winningSymbol === p2.getSymbol()) {
-            return {player: p2, pairs: winningPairs};
+        if (winningSymbol === state.p1.getSymbol()) {
+            return {player: state.p1, pairs: winningPairs};
+        } else if (winningSymbol === state.p2.getSymbol()) {
+            return {player: state.p2, pairs: winningPairs};
         } else {
             return null
         }
     }
 
-    const terminal = (board, p1, p2) => {
-        if (winner(board, p1, p2)) {
+    const terminal = (state) => {
+        if (winner(state)) {
             return true
-        } else if (actions(board).length <= 0) {
+        } else if (actions(state).length <= 0) {
             return true
         } else {
             return false;
@@ -352,40 +389,40 @@ const logic = (() => {
     }
 
     // AI Functions
-    const utility = (board, p1, p2) => {
-        const data = winner(board, p1, p2) ?? ""
+    const utility = (state) => {
+        const data = winner(state) ?? ""
         const winningPlayer = data.player ?? ""
-        if (winningPlayer === p1) {
+        if (winningPlayer === state.p1) {
             return 1;
-        } else if (winningPlayer === p2) {
+        } else if (winningPlayer === state.p2) {
             return -1;
         } else {
             return 0;
         }
     }
 
-    const maxValue = (board, p1, p2, counter) => {
+    const maxValue = (state, counter) => {
         counter[0] += 1;
-        if (terminal(board, p1, p2)) {
-            return utility(board, p1, p2);
+        if (terminal(state)) {
+            return utility(state);
         }
         let value = -1;
-        const allActions = actions(board);
+        const allActions = actions(state);
         for (let i = 0; i < allActions.length; i++) {
-            value = Math.max(value, minValue(result(board, p1, p2, allActions[i]), p1, p2, counter))
+            value = Math.max(value, minValue(result(state, allActions[i]), counter))
         }
         return value;
     }
 
-    const minValue = (board, p1, p2, counter) => {
+    const minValue = (state, counter) => {
         counter[0] += 1;
-        if (terminal(board, p1, p2)) {
-            return utility(board, p1, p2);
+        if (terminal(state)) {
+            return utility(state);
         }
         let value = 1;
-        const allActions = actions(board);
+        const allActions = actions(state);
         for (let i = 0; i < allActions.length; i++) {
-            value = Math.min(value, maxValue(result(board, p1, p2, allActions[i]), p1, p2, counter))
+            value = Math.min(value, maxValue(result(state, allActions[i]), counter))
         }
         return value
     }
@@ -402,15 +439,15 @@ const logic = (() => {
         }
         return newArray
     }
-    const minimax = (board, p1, p2) => {
-        const nextPlayer = player(board, p1, p2);
-        const availableActions = shuffled(actions(board))
-        if (nextPlayer === p1) {
+    const minimax = (state) => {
+        const nextPlayer = player(state);
+        const availableActions = shuffled(actions(state))
+        if (nextPlayer === state.p1) {
             const counter = [0]
             let bestAction = availableActions.pop();
-            let value = minValue(result(board, p1, p2, bestAction), p1, p2, counter);
+            let value = minValue(result(state, bestAction), counter);
             for (let i = 0; i < availableActions.length; i++) {
-                const newValue = minValue(result(board, p1, p2, availableActions[i]), p1, p2, counter);
+                const newValue = minValue(result(state, availableActions[i]), counter);
                 if (newValue > value) {
                     bestAction = availableActions[i];
                     value = newValue;
@@ -421,9 +458,9 @@ const logic = (() => {
         } else {
             const counter = [0]
             let bestAction = availableActions.pop();
-            let value = maxValue(result(board, p1, p2, bestAction), p1, p2, counter);
+            let value = maxValue(result(state, bestAction), counter);
             for (let i = 0; i < availableActions.length; i++) {
-                const newValue = maxValue(result(board, p1, p2, availableActions[i]), p1, p2, counter);
+                const newValue = maxValue(result(state, availableActions[i]), counter);
                 if (newValue < value) {
                     bestAction = availableActions[i];
                     value = newValue;
@@ -448,58 +485,62 @@ const logic = (() => {
 
 // Game Module
 const game = (() => {
-    let board = null
-    let p1 = Player()
-    let p2 = Player()
+    // let board = null
+    // let p1 = Player()
+    // let p2 = Player()
+    let state = State();
 
     const emptyBoard = [[null, null, null],
                         [null, null, null],
                         [null, null, null]];
 
     const startGame = (data) => {
-        board = logic.clone(emptyBoard);
-        p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer);
-        p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer);
-
-        events.emit("boardUpdated", board)
+        const board = Board(emptyBoard);
+        const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer);
+        const p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer);
+        state = State(board, p1, p2);
+        events.emit("boardUpdated", state)
         events.emit("gameStart", "");
-        events.emit("nextPlayerUpdated", logic.player(board, p1, p2))
+        events.emit("nextPlayerUpdated", logic.player(state))
     }
 
     const resolveBoard = () => {
         // Check if won or drawn
-        const data = logic.winner(board, p1, p2)
+        const data = logic.winner(state)
         if (data) {
             events.emit("gameWon", data);
-        } else if (logic.terminal(board, p1, p2)) {
+        } else if (logic.terminal(state)) {
             events.emit("gameDrawn", "");
         }
 
     }
 
     const clickedCell = (cell) => {
-        if (board[cell[1]][cell[0]] != null) {
+        if (state.board.getBoard()[cell[1]][cell[0]] != null) {
             // Do nothing
         } else {
-            board = logic.result(board, p1, p2, cell);
+            state = logic.result(state, cell);
         }
-        events.emit("boardUpdated", board);
-        events.emit("nextPlayerUpdated", logic.player(board, p1, p2));
+        events.emit("boardUpdated", state);
+        events.emit("nextPlayerUpdated", logic.player(state));
 
         resolveBoard();
     }
 
     const resetGame = () => {
-        board = logic.clone(emptyBoard);
-        events.emit("boardUpdated", board);
+        const board = Board(emptyBoard);
+        const p1 = Player();
+        const p2 = Player();
+        state = State(board, p1, p2);
+        events.emit("boardUpdated", state);
         events.emit("gameReset");
     }
 
     const checkForAiMove = (_) => {
-        const nextPlayer = logic.player(board, p1, p2)
-        if (!logic.terminal(board, p1, p2)){
+        if (!logic.terminal(state)) {
+            const nextPlayer = logic.player(state)
             if (nextPlayer.isAi() === true) {
-                const bestMove = logic.minimax(board, p1, p2);
+                const bestMove = logic.minimax(state);
                 setTimeout(() => {events.emit("clickedCell", bestMove)}, 200);
             }
         }
@@ -519,8 +560,9 @@ const game = (() => {
 // Do button click animation
 // pretyfy colours and css (select boxes, headings, fonts)
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
-// change functions to pass around state rather than board, p1, p2
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
 // Make "random" button that auto picks some emojis and fills in random player names
 // Add alpha beta pruning
+// add memo
+// refactor to neater minimax
