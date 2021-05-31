@@ -401,32 +401,6 @@ const logic = (() => {
         }
     }
 
-    const maxValue = (state, counter) => {
-        counter[0] += 1;
-        if (terminal(state)) {
-            return utility(state);
-        }
-        let value = -1;
-        const allActions = actions(state);
-        for (let i = 0; i < allActions.length; i++) {
-            value = Math.max(value, minValue(result(state, allActions[i]), counter))
-        }
-        return value;
-    }
-
-    const minValue = (state, counter) => {
-        counter[0] += 1;
-        if (terminal(state)) {
-            return utility(state);
-        }
-        let value = 1;
-        const allActions = actions(state);
-        for (let i = 0; i < allActions.length; i++) {
-            value = Math.min(value, maxValue(result(state, allActions[i]), counter))
-        }
-        return value
-    }
-
     const shuffled = (array) => {
         // Ref: https://bost.ocks.org/mike/shuffle/compare.html
         // Fisher-Yates shuffle (but not in-place)
@@ -439,36 +413,67 @@ const logic = (() => {
         }
         return newArray
     }
-    const minimax = (state) => {
-        const nextPlayer = player(state);
-        const availableActions = shuffled(actions(state))
-        if (nextPlayer === state.p1) {
-            const counter = [0]
-            let bestAction = availableActions.pop();
-            let value = minValue(result(state, bestAction), counter);
-            for (let i = 0; i < availableActions.length; i++) {
-                const newValue = minValue(result(state, availableActions[i]), counter);
-                if (newValue > value) {
-                    bestAction = availableActions[i];
-                    value = newValue;
-                }
-            }
-            console.log(counter[0]);
-            return bestAction;
-        } else {
-            const counter = [0]
-            let bestAction = availableActions.pop();
-            let value = maxValue(result(state, bestAction), counter);
-            for (let i = 0; i < availableActions.length; i++) {
-                const newValue = maxValue(result(state, availableActions[i]), counter);
-                if (newValue < value) {
-                    bestAction = availableActions[i];
-                    value = newValue;
-                }
-            }
-            console.log(counter[0]);
-            return bestAction;
+
+    const alphabeta = (state, depth, alpha, beta, maximizingPlayer) => {
+        if (depth === 0) {
+            return utility(state);
         }
+        if (terminal(state)) {
+            return utility(state);
+        }
+
+        if (maximizingPlayer === true) {
+            let value = -Infinity;
+            const availableActions = shuffled(actions(state))
+            for (let i = 0; i < availableActions.length; i++) {
+                value = Math.max(value, alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, false));
+                alpha = Math.max(alpha, value);
+                if (alpha >= beta) {
+                    break; // beta cutoff
+                }
+            }
+            return value;
+        } else {
+            let value = Infinity;
+            const availableActions = shuffled(actions(state))
+            for (let i = 0; i < availableActions.length; i++) {
+                value = Math.min(value, alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, true));
+                beta = Math.min(beta, value);
+                if (beta <= alpha) {
+                    break; // alpha cutoff
+                }
+            }
+            return value;
+        }
+    }
+
+    const minimax = (state) => {
+        const availableActions = shuffled(actions(state))
+        // const availableActions = actions(state);
+        
+        let bestAction = null
+        if (logic.player(state) === state.p1) {
+            let value = -Infinity;
+            for (let i = 0; i < availableActions.length; i++) {
+                const newValue = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, false);
+                if (newValue > value) {
+                    value = newValue;
+                    bestAction = availableActions[i]
+                }
+            }
+        } else {
+            let value = Infinity;
+            for (let i = 0; i < availableActions.length; i++) {
+                const newValue = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, true);
+                if (newValue < value) {
+                    value = newValue;
+                    bestAction = availableActions[i]
+                }
+                console.log(`${availableActions[i]} - val: ${newValue}. Running best choice: ${bestAction} - val: ${value}`)
+            }
+        }
+        return bestAction;
+
     }
 
     return {
@@ -494,8 +499,13 @@ const game = (() => {
                         [null, null, null],
                         [null, null, null]];
 
+    const testBoard = [["X", "X", "O"],
+                        [null, "O", null],
+                        [null, null, null]]
+
     const startGame = (data) => {
         const board = Board(emptyBoard);
+        // const board = Board(testBoard);
         const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer);
         const p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer);
         state = State(board, p1, p2);
@@ -540,6 +550,8 @@ const game = (() => {
         if (!logic.terminal(state)) {
             const nextPlayer = logic.player(state)
             if (nextPlayer.isAi() === true) {
+                console.log('turn start current board state is')
+                console.table(state.board.getBoard())
                 const bestMove = logic.minimax(state);
                 setTimeout(() => {events.emit("clickedCell", bestMove)}, 200);
             }
