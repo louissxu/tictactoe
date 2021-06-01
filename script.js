@@ -414,36 +414,84 @@ const logic = (() => {
         return newArray
     }
 
-    const alphabeta = (state, depth, alpha, beta, maximizingPlayer) => {
+    const hash = (state) => {
+        const hash = state.board.getBoard()
+            .flat()
+            .map(cell => cell ?? "_") 
+            .join("")
+        return hash
+    }
+
+    const alphabeta = (state, depth, alpha, beta, maximizingPlayer, counter, memo) => {
+        counter[0] += 1 // Logging number of calls to alphabeta
+
         if (depth === 0) {
-            return utility(state);
+            return {
+                value: utility(state),
+                precise: false,
+            };
         }
         if (terminal(state)) {
-            return utility(state);
+            return {
+                value: utility(state),
+                precise: true,
+            };
+        }
+
+        if (hash(state) in memo) {
+            memo[hash(state)][1] += 1;
+            return {
+                value: memo[hash(state)][0],
+                precise: true,
+            }
         }
 
         if (maximizingPlayer === true) {
             let value = -Infinity;
             const availableActions = shuffled(actions(state))
+            let precise = true;
             for (let i = 0; i < availableActions.length; i++) {
-                value = Math.max(value, alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, false));
+                const {value: newValue, precise: newPrecise} = alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, false, counter, memo);
+                if (newPrecise == false) {
+                    precise = false;
+                }
+                value = Math.max(value, newValue);
                 alpha = Math.max(alpha, value);
                 if (alpha >= beta) {
+                    precise = false;
                     break; // beta cutoff
                 }
             }
-            return value;
+            if (precise) {
+                memo[hash(state)] = [value, 0];
+            }
+            return {
+                value,
+                precise,
+            };
         } else {
             let value = Infinity;
             const availableActions = shuffled(actions(state))
+            let precise = true;
             for (let i = 0; i < availableActions.length; i++) {
-                value = Math.min(value, alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, true));
+                const {value: newValue, precise: newPrecise} = alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, true, counter, memo);
+                if (newPrecise == false) {
+                    precise = false;
+                }
+                value = Math.min(value, newValue);
                 beta = Math.min(beta, value);
                 if (beta <= alpha) {
+                    precise = false;
                     break; // alpha cutoff
                 }
             }
-            return value;
+            if (precise) {
+                memo[hash(state)] = [value, 0];
+            }
+            return {
+                value,
+                precise,
+            };
         }
     }
 
@@ -452,26 +500,38 @@ const logic = (() => {
         // const availableActions = actions(state);
         
         let bestAction = null
+        let counter = [0]
+        let memo = {}
         if (logic.player(state) === state.p1) {
             let value = -Infinity;
             for (let i = 0; i < availableActions.length; i++) {
-                const newValue = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, false);
+                const {value: newValue, precise: precise} = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, false, counter, memo);
                 if (newValue > value) {
                     value = newValue;
                     bestAction = availableActions[i]
                 }
+                // console.log(`Location ${availableActions[i]} value ${newValue} || best choice ${bestAction} value ${value}`)
             }
         } else {
             let value = Infinity;
             for (let i = 0; i < availableActions.length; i++) {
-                const newValue = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, true);
+                const {value: newValue, precise: precise} = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, true, counter, memo);
                 if (newValue < value) {
                     value = newValue;
                     bestAction = availableActions[i]
                 }
-                console.log(`${availableActions[i]} - val: ${newValue}. Running best choice: ${bestAction} - val: ${value}`)
+                // console.log(`Location ${availableActions[i]} value ${newValue} || best choice ${bestAction} value ${value}`)
             }
         }
+
+        // console.log(memo)
+        // const arr = []
+        // for (key in memo) {
+        //     arr.push([key, ...memo[key]])
+        // }
+        // arr.sort((a, b) => (a[2] - b[2]))
+        // console.log(arr)
+        console.log(counter[0])
         return bestAction;
 
     }
@@ -484,6 +544,7 @@ const logic = (() => {
         player,
         utility,
         minimax,
+        hash,
     }
 })();
 
@@ -550,8 +611,6 @@ const game = (() => {
         if (!logic.terminal(state)) {
             const nextPlayer = logic.player(state)
             if (nextPlayer.isAi() === true) {
-                console.log('turn start current board state is')
-                console.table(state.board.getBoard())
                 const bestMove = logic.minimax(state);
                 setTimeout(() => {events.emit("clickedCell", bestMove)}, 200);
             }
