@@ -272,7 +272,6 @@ const Board = (board = null) => {
     return {
         getBoard,
         setCell,
-        board // Temp so i can view the board value itself
     }
 }
 
@@ -497,7 +496,6 @@ const logic = (() => {
 
     const minimax = (state) => {
         const availableActions = shuffled(actions(state))
-        // const availableActions = actions(state);
         
         let bestAction = null
         let counter = [0]
@@ -510,7 +508,6 @@ const logic = (() => {
                     value = newValue;
                     bestAction = availableActions[i]
                 }
-                // console.log(`Location ${availableActions[i]} value ${newValue} || best choice ${bestAction} value ${value}`)
             }
         } else {
             let value = Infinity;
@@ -520,17 +517,9 @@ const logic = (() => {
                     value = newValue;
                     bestAction = availableActions[i]
                 }
-                // console.log(`Location ${availableActions[i]} value ${newValue} || best choice ${bestAction} value ${value}`)
             }
         }
 
-        // console.log(memo)
-        // const arr = []
-        // for (key in memo) {
-        //     arr.push([key, ...memo[key]])
-        // }
-        // arr.sort((a, b) => (a[2] - b[2]))
-        // console.log(arr)
         console.log(counter[0])
         return bestAction;
 
@@ -551,22 +540,14 @@ const logic = (() => {
 
 // Game Module
 const game = (() => {
-    // let board = null
-    // let p1 = Player()
-    // let p2 = Player()
     let state = State();
 
     const emptyBoard = [[null, null, null],
                         [null, null, null],
                         [null, null, null]];
 
-    const testBoard = [["X", "X", "O"],
-                        [null, "O", null],
-                        [null, null, null]]
-
     const startGame = (data) => {
         const board = Board(emptyBoard);
-        // const board = Board(testBoard);
         const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer);
         const p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer);
         state = State(board, p1, p2);
@@ -634,6 +615,3 @@ const game = (() => {
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
 // Make "random" button that auto picks some emojis and fills in random player names
-// Add alpha beta pruning
-// add memo
-// refactor to neater minimax
