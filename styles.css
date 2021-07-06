@@ -20,37 +20,48 @@ button.button {
   font-size: 16px;
   width: 140px;
   margin: 5px;
-  background-color: #3e68ff;
+  background-color: #2f8ac7;
   color: #fff;
   border-radius: 8px;
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
   padding: 0.25em 0.75em;
   min-width: 10ch;
   min-height: 44px;
   text-align: center;
   line-height: 1.1;
-  transition: 220ms all ease-in-out; }
+  transition: 100ms all ease-in-out; }
   button.button:hover {
-    background-color: #0037fe; }
+    background-color: #54a2d7; }
+  button.button:active {
+    background-color: #236895; }
   button.button:focus {
     outline-style: solid;
     outline-color: transparent;
-    box-shadow: 0 0 0 4px #0029be; }
+    box-shadow: 0 0 0 3px #94c5e6; }
   button.button:disabled {
-    background-color: #3e68ff; }
+    background-color: #bdc3c7;
+    opacity: 0.7;
+    cursor: none; }
 
 .button-subcell {
   text-align: center; }
 
 button.cell {
-  background-color: #F8F8F8;
+  background-color: #bdc3c7;
   border: none;
   font-size: 40px;
   text-align: center;
-  transition-duration: 1.2s; }
-
-.cell:disabled {
-  background-color: #E0E0E0; }
+  transition: 100ms all ease-in-out;
+  border-radius: 15px;
+  box-shadow: 0 9px #999; }
+  button.cell:hover {
+    background-color: #cacfd2; }
+  button.cell:active {
+    background-color: #89939a;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px); }
+  button.cell:disabled {
+    background-color: #bdc3c7;
+    cursor: none; }
 
 /* .cell:hover:enabled {
     background-color: #E0E0E0;
@@ -102,7 +113,7 @@ header {
   max-width: 200px;
   margin-left: auto;
   margin-right: auto;
-  background-color: green; }
+  background-color: white; }
 
 #container-board {
   width: 350px;
@@ -117,12 +128,13 @@ header {
 
 #game-board {
   width: 300px;
-  height: 300px;
+  height: 330px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-gap: 3px;
-  background-color: gray; }
+  grid-template-rows: 1fr 1fr 1fr 0px;
+  grid-column-gap: 3px;
+  grid-row-gap: 12px;
+  background-color: white; }
 
 #game-alerts {
   height: 50px;
@@ -132,7 +144,7 @@ header {
 
 #container-canvas {
   position: relative;
-  top: -300px;
+  top: -330px;
   text-align: center; }
 
 #canvas {

@@ -1,3 +1,5 @@
+$primaryColour: rgb(47, 138, 199);
+
 body {
     font-family: "Baloo 2", sans-serif;
 }
@@ -22,7 +24,7 @@ button.button, button.cell {
 }
 
 $btnColour: rgba(47, 138, 199, 1);
-$disabledColour: #bdc3c7;
+$disabledColour: rgb(189, 195, 199);
 
 button.button {
     font-size: 16px;
@@ -41,7 +43,7 @@ button.button {
     text-align: center;
     line-height: 1.1;
 
-    transition: 220ms all ease-in-out;
+    transition: 100ms all ease-in-out;
 
     &:hover {
         background-color: scale-color($btnColour, $lightness: 20%);
@@ -68,18 +70,48 @@ button.button {
     text-align: center;
 }
 
+$cellColour: rgb(189, 195, 199);
+$cellDisabledColour: rgb(189, 195, 199);
+
 button.cell {
-    background-color: #F8F8F8;
+    background-color: $cellColour;
     border: none;
     font-size: 40px;
     text-align: center;
 
-    transition-duration: 1.2s;
+    transition: 100ms all ease-in-out;
+
+    border-radius: 15px;
+
+    box-shadow: 0 9px #999;
+    
+    &:hover {
+        background-color: scale-color($cellColour, $lightness: 20%);
+    }
+
+    &:active {
+        background-color: scale-color($cellColour, $lightness: -25%, $saturation: -0%);
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+    }
+
+    &:focus {
+        // outline-style: solid;
+        // outline-color: transparent;
+        // border: 3px solid scale-color($cellColour, $lightness: 50%);
+        // box-shadow: 0 0 0 3px scale-color($cellColour, $lightness: 50%);
+    }
+
+    &:disabled {
+        background-color: $cellDisabledColour;
+        // opacity: 0.7;
+        cursor: none;
+    }
 }
 
-.cell:disabled {
-    background-color: #E0E0E0;
-}
+// .cell:disabled {
+//     background-color: #E0E0E0;
+// }
 
 /* .cell:hover:enabled {
     background-color: #E0E0E0;
@@ -157,14 +189,15 @@ header {
 
 #game-board {
     width: 300px;
-    height: 300px;
+    height: 330px;
     
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 0px;
     
-    grid-gap: 3px;
-    background-color: gray;
+    grid-column-gap: 3px;
+    grid-row-gap: 12px;
+    background-color: white;
 }
 
 #game-alerts {
@@ -176,7 +209,7 @@ header {
 
 #container-canvas {
     position: relative;
-    top: -300px;
+    top: -330px;
     text-align: center;
 }
 

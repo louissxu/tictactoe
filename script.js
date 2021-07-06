@@ -140,10 +140,15 @@ const ui = (() => {
 
     const renderWinningPosition = (pairs) => {
         // Geometric transforms
+
+        // **Note** the transform values were calculated based on the final element size and grid gaps
+        // ie given that the game board is set to be 300*330. But grid gaps are taken out etc. then
+        // the values are odd values. Final cell size is 98x98 with 3px horizontal sep, 12px vert sep
+
         // Scales up to display grid size
-        const scaledPairs = pairs.map(([[ax, ay], [bx, by]]) => [[ax*100, ay*100], [bx*100, by*100]]);
+        const scaledPairs = pairs.map(([[ax, ay], [bx, by]]) => [[ax*101, ay*110], [bx*101, by*110]]);
         // Moves origin so it is centred on grid
-        const shiftedPairs = scaledPairs.map(([[ax, ay], [bx, by]]) => [[ax+50, ay+50], [bx+50, by+50]]);
+        const shiftedPairs = scaledPairs.map(([[ax, ay], [bx, by]]) => [[ax+49, ay+49], [bx+49, by+49]]);
         // Vector scales to "extend" the line past the centre of the squares
         const vectorScaledPairs = shiftedPairs.map(([[ax, ay], [bx, by]]) => {
             // // Centre between both points
@@ -197,7 +202,7 @@ const ui = (() => {
 
     const renderGameReset = (board) => {
         disableBoard();
-        alertText.textContent = "";
+        alertText.textContent = 'Press "Start Game" to begin.';
 
         playerSettingsButtons.forEach((element) => element.removeAttribute("disabled"));
         startGameButton.removeAttribute("disabled");
@@ -616,3 +621,7 @@ const game = (() => {
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
 // Make "random" button that auto picks some emojis and fills in random player names
 // disable board state or something while doing timeout wait (so you can't jump in and click a cell while the game is waiting)
+// change "random" to "demo"
+// add "imperfect ai" mode. so i can use that for demo so sometimes someone wins
+// have cells highlight the winning cells and only fade the losing cells when the game is won
+// fade out teh entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
