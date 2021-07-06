@@ -615,3 +615,4 @@ const game = (() => {
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
 // Make "random" button that auto picks some emojis and fills in random player names
+// disable board state or something while doing timeout wait (so you can't jump in and click a cell while the game is waiting)
