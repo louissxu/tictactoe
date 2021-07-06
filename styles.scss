@@ -21,7 +21,8 @@ button.button, button.cell {
     justify-content: center;
 }
 
-$btnColour: rgba(62, 104, 255, 1);
+$btnColour: rgba(47, 138, 199, 1);
+$disabledColour: #bdc3c7;
 
 button.button {
     font-size: 16px;
@@ -31,7 +32,7 @@ button.button {
     background-color: $btnColour;
     color: #fff;
     border-radius: 8px;
-    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
+    // box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
 
     padding: 0.25em 0.75em;
     min-width: 10ch;
@@ -42,19 +43,24 @@ button.button {
 
     transition: 220ms all ease-in-out;
 
-    &:hover,
+    &:hover {
+        background-color: scale-color($btnColour, $lightness: 20%);
+    }
+
     &:active {
-        background-color: scale-color($btnColour, $lightness: -20%);
+        background-color: scale-color($btnColour, $lightness: -25%, $saturation: -0%);
     }
 
     &:focus {
         outline-style: solid;
         outline-color: transparent;
-        box-shadow: 0 0 0 4px scale-color($btnColour, $lightness: -40%);
+        box-shadow: 0 0 0 3px scale-color($btnColour, $lightness: 50%);
     }
 
     &:disabled {
-        background-color: scale-color($btnColour, $lightness: -20%, $saturation: -100%, $alpha: .9);
+        background-color: $disabledColour;
+        opacity: 0.7;
+        cursor: none;
     }
 }
 
@@ -133,7 +139,7 @@ header {
     max-width: 200px;
     margin-left: auto;
     margin-right: auto;
-    background-color: green;
+    background-color: white;
 }
 
 #container-board {
