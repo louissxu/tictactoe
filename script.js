@@ -625,3 +625,5 @@ const game = (() => {
 // add "imperfect ai" mode. so i can use that for demo so sometimes someone wins
 // have cells highlight the winning cells and only fade the losing cells when the game is won
 // fade out teh entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
+// check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
+// when you have have ai game playing and press reset it plays an extra turn. what is going on there?
