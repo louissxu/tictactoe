@@ -81,28 +81,34 @@ const ui = (() => {
 
     const clickedStart = (e) => {
         // Cache DOM
-        p1Name = gameControls.querySelector("#p1-name")
-        p1Symbol = gameControls.querySelector("#p1-symbol")
-        p1Computer= gameControls.querySelector("input[name='p1']:checked")  // Ref: https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
-        p2Name= gameControls.querySelector("#p2-name")
-        p2Symbol= gameControls.querySelector("#p2-symbol")
-        p2Computer= gameControls.querySelector("input[name='p2']:checked")
+        p1Name = gameControls.querySelector("#p1-name");
+        p1Symbol = gameControls.querySelector("#p1-symbol");
+        p1Computer = gameControls.querySelector("input[name='p1-human-or-ai']:checked");  // Ref: https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
+        p1Imperfect = gameControls.querySelector("#p1-imperfect");
+        p2Name = gameControls.querySelector("#p2-name");
+        p2Symbol = gameControls.querySelector("#p2-symbol");
+        p2Computer = gameControls.querySelector("input[name='p2-human-or-ai']:checked");
+        p2Imperfect = gameControls.querySelector("#p2-imperfect");
 
         // Fill default values if nothing entered
         p1NameVal = String(p1Name.value) || "Player 1";
         p1SymbolVal = String(p1Symbol.value) || "X";
         p1ComputerVal = String(p1Computer.value) || "human";
+        p1ImperfectVal = Boolean(p1Imperfect.checked) || false;
         p2NameVal = String(p2Name.value) || "Player 2";
         p2SymbolVal = String(p2Symbol.value) || "O";
         p2ComputerVal = String(p2Computer.value) || "human";
+        p2ImperfectVal = Boolean(p2Imperfect.checked) || false;
 
         events.emit("clickedStart", {
             p1Name: p1NameVal,
             p1Symbol: p1SymbolVal,
             p1Computer: p1ComputerVal,
+            p1Imperfect: p1ImperfectVal,
             p2Name: p2NameVal,
             p2Symbol: p2SymbolVal,
             p2Computer: p2ComputerVal,
+            p2Imperfect: p2ImperfectVal,
         });
     }
 
@@ -240,19 +246,22 @@ const ui = (() => {
 
 
 // Player Factory
-const Player = (playerName = null, symbol = null, ai = null) => {
+const Player = (playerName = null, symbol = null, ai = null, imperfect = null) => {
     playerName = playerName ?? "Player 1";
     symbol = symbol ?? "X";
     ai = ai ?? "human";
+    imperfect = imperfect ?? false;
 
     const getSymbol = () => symbol;
     const getName = () => playerName;
     const isAi = () => ai == "ai" ? true : false;
+    const isImperfect = () => imperfect;
 
     return {
         getSymbol,
         getName,
         isAi,
+        isImperfect,
     }
 }
 
@@ -530,6 +539,11 @@ const logic = (() => {
 
     }
 
+    const randomAction = (state) => {
+        const availableActions = shuffled(actions(state))
+        return availableActions[0];
+    }
+
     return {
         clone,
         result,
@@ -539,6 +553,7 @@ const logic = (() => {
         utility,
         minimax,
         hash,
+        randomAction,
     }
 })();
 
@@ -553,8 +568,8 @@ const game = (() => {
 
     const startGame = (data) => {
         const board = Board(emptyBoard);
-        const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer);
-        const p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer);
+        const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer, data.p1Imperfect);
+        const p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer, data.p2Imperfect);
         state = State(board, p1, p2);
         events.emit("boardUpdated", state)
         events.emit("gameStart", "");
@@ -596,9 +611,19 @@ const game = (() => {
     const checkForAiMove = (_) => {
         if (!logic.terminal(state)) {
             const nextPlayer = logic.player(state)
-            if (nextPlayer.isAi() === true) {
+            if (nextPlayer.isAi() === true && nextPlayer.isImperfect() === false) {
                 const bestMove = logic.minimax(state);
                 setTimeout(() => {events.emit("clickedCell", bestMove)}, 200);
+            } else if (nextPlayer.isAi() === true && nextPlayer.isImperfect() === true) {
+                const chance = Math.random();
+                if (chance < 0.1) {
+                    const nextMove = logic.randomAction(state)
+                    setTimeout(() => {events.emit("clickedCell", nextMove)}, 200)
+                } else {
+                    const nextMove = logic.minimax(state)
+                    setTimeout(() => {events.emit("clickedCell", nextMove)}, 200)
+                }
+                
             }
         }
     }
@@ -627,3 +652,4 @@ const game = (() => {
 // fade out teh entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
 // when you have have ai game playing and press reset it plays an extra turn. what is going on there?
+// neaten up checkForAiMove function
