@@ -116,6 +116,36 @@ const ui = (() => {
         events.emit("clickedReset", "");
     }
 
+    const clickedHuman = (e) => {
+        // When human is selected. Automatically clear imperfect ai field.
+        const p1ImperfectField = gameControls.querySelector("#p1-imperfect");
+        const p2ImperfectField = gameControls.querySelector("#p2-imperfect");
+
+        const playerId = e.target.id.slice(0, 2);
+
+        if (playerId === "p1") {
+            p1ImperfectField.checked = false
+        } else if (playerId === "p2") {
+            p2ImperfectField.checked = false
+        }
+    }
+
+    const clickedImperfectAi = (e) => {
+        // When imperfect AI is clicked. Change Human/AI selector to AI automatically.
+        const p1AiField = gameControls.querySelector("#p1-ai");
+        const p2AiField = gameControls.querySelector("#p2-ai");
+
+        const playerId = e.target.id.slice(0, 2);
+
+        if (e.target.checked === true) {
+            if (playerId === "p1") {
+                p1AiField.checked = true
+            } else if (playerId === "p2") {
+                p2AiField.checked = true
+            }
+        }
+    }
+
     const clickedCell = (e) => {
         events.emit("clickedCell", [
             e.target.getAttribute("data-x-coordinate"),
@@ -222,16 +252,31 @@ const ui = (() => {
         alertText.textContent = `${player.getName()}'s turn. Place your ${player.getSymbol()}.`
     }
     
+    
+
+
     // Bind Events
     gameControls.querySelector("#start-game").addEventListener("click", clickedStart);
 
-    gameControls.querySelector("#reset-game").addEventListener("click", clickedReset)
+    gameControls.querySelector("#reset-game").addEventListener("click", clickedReset);
+
+    gameControls.addEventListener("change", (e) => {
+        if (e.target.type === "radio" && e.target.value === "human"){
+            clickedHuman(e);
+        }
+    })
+
+    gameControls.addEventListener("change", (e) => {
+        if (e.target.classList.contains("imperfect-checkbox")) {
+            clickedImperfectAi(e);
+        }
+    });
 
     gameBoard.addEventListener("click", (e) => {
         if (e.target.classList.contains("cell")) {
-            clickedCell(e)
+            clickedCell(e);
         }
-    })
+    });
 
     events.on("boardUpdated", renderBoard);
     events.on("gameStart", renderGameStart);
