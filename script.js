@@ -50,13 +50,54 @@ const ui = (() => {
     // Cache game Controls DOM
     const p1Name = gameControls.querySelector("#p1-name");
     const p1Symbol = gameControls.querySelector("#p1-symbol");
-    const p1Computer = Array.from(gameControls.getElementsByName("p1-human-or-ai"));
+    const p1Computer = Array.from(document.getElementsByName("p1-human-or-ai"));
     const p1Imperfect = gameControls.querySelector("#p1-imperfect");
     const p2Name = gameControls.querySelector("#p2-name");
     const p2Symbol = gameControls.querySelector("#p2-symbol");
-    const p2Computer = Array.from(gameControls.getElementsByName("p2-human-or-ai"));
+    const p2Computer = Array.from(document.getElementsByName("p2-human-or-ai"));
     const p2Imperfect = gameControls.querySelector("#p2-imperfect");
 
+    const p1Ai = gameControls.querySelector("#p1-ai")
+    const p2Ai = gameControls.querySelector("#p2-ai")
+
+    // Add symbols to select boxes in UI
+    const names = [
+        [["John Doe", "❌"], ["Richard Roe", "⭕"]],
+        [["Alice", "🔑"], ["Bob", "🔒"]],
+        [["Dipper", "🧢"], ["Mabel", "🌈"]],
+        [["Wallace", "🧀"], ["Gromit", "🦴"]],
+        [["Fry", "🚀"], ["Bender", "🤖"]],
+        // ["Tom", "Jerry"],
+        // ["Finn", "Jake"],
+        // ["Stewie", "Brian"],
+        // ["Rick", "Morty"],
+        // ["Bart", "Lisa"],
+        // ["Shrek", "Donkey"],
+        // ["Garfield", "Odie"],
+        // ["Ralph", "Vanellope"],
+        // ["Itchy", "Scratchy"],
+        // ["R2D2", "C-3PO"],
+        // ["Mario", "Luigi"],
+        // ["Buzz", "Woody"],
+        // ["Bert", "Ernie"],
+        // ["Mickey", "Minnie"],
+        // ["Sherlock", "Watson"],
+        // ["Marlin", "Dory"],
+        // ["Calvin", "Hobbes"],
+        // ["Bluey", "Bingo"],
+    ]
+
+    for (i=0; i<names.length; i++){
+        const opt1 = document.createElement("option");
+        opt1.value = names[i][0][1];
+        opt1.innerHTML = names[i][0][1];
+        p1Symbol.appendChild(opt1);
+
+        const opt2 = document.createElement("option");
+        opt2.value = names[i][1][1];
+        opt2.innerHTML = names[i][1][1];
+        p2Symbol.appendChild(opt2);
+    }
 
     // UI Functions
     const clearBoard = () => {
@@ -119,34 +160,23 @@ const ui = (() => {
         // Resets board and plays a demo game with random values and two imperfect ai's
         events.emit("clickedReset", "")
 
-        const names = [
-            [["Dipper", "🧢"], ["Mabel", "🌈"]],
-            [["Wallace", "🧀"], ["Gromit", "🦴"]],
-            // ["Fry", "Bender"],
-            // ["Tom", "Jerry"],
-            // ["Finn", "Jake"],
-            // ["Stewie", "Brian"],
-            // ["Rick", "Morty"],
-            // ["Bart", "Lisa"],
-            // ["Shrek", "Donkey"],
-            // ["Garfield", "Odie"],
-            // ["Ralph", "Vanellope"],
-            // ["Itchy", "Scratchy"],
-            // ["R2D2", "C-3PO"],
-            // ["Mario", "Luigi"],
-            // ["Buzz", "Woody"],
-            // ["Bert", "Ernie"],
-            // ["Mickey", "Minnie"],
-            // ["Sherlock", "Watson"],
-            // ["Marlin", "Dory"],
-            // ["Calvin", "Hobbes"],
-            // ["Bluey", "Bingo"],
-        ]
-
-        const choice = names[Math.floor(Math.random()*(names.length))]
-        console.log(choice)
-
+        let choice;
+        do {
+            choice = names[Math.floor(Math.random()*(names.length))]
+        } while (p1Name.value === choice[0][0] && p2Name.value === choice[1][0]);
         
+        // Fill in values into the controls window
+        p1Name.value = choice[0][0];
+        p1Symbol.value = choice[0][1];
+        p1Ai.checked = true;
+        p1Imperfect.checked = true;
+
+        p2Name.value = choice[1][0];
+        p2Symbol.value = choice[1][1];
+        p2Ai.checked = true;
+        p2Imperfect.checked = true;
+
+        clickedStart("");
     }
 
     const clickedReset = (e) => {
@@ -737,3 +767,4 @@ const game = (() => {
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
 // when you have have ai game playing and press reset it plays an extra turn. what is going on there?
 // neaten up checkForAiMove function
+// fix bug where delaying move means that move executes later if you reset and start new game within delay period. Replicate by mashing demo and letting it play out
