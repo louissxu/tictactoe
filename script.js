@@ -47,6 +47,17 @@ const ui = (() => {
 
     const canvas = document.querySelector("#canvas");
 
+    // Cache game Controls DOM
+    const p1Name = gameControls.querySelector("#p1-name");
+    const p1Symbol = gameControls.querySelector("#p1-symbol");
+    const p1Computer = Array.from(gameControls.getElementsByName("p1-human-or-ai"));
+    const p1Imperfect = gameControls.querySelector("#p1-imperfect");
+    const p2Name = gameControls.querySelector("#p2-name");
+    const p2Symbol = gameControls.querySelector("#p2-symbol");
+    const p2Computer = Array.from(gameControls.getElementsByName("p2-human-or-ai"));
+    const p2Imperfect = gameControls.querySelector("#p2-imperfect");
+
+
     // UI Functions
     const clearBoard = () => {
         while (gameBoard.firstChild) {
@@ -80,25 +91,17 @@ const ui = (() => {
     }
 
     const clickedStart = (e) => {
-        // Cache DOM
-        p1Name = gameControls.querySelector("#p1-name");
-        p1Symbol = gameControls.querySelector("#p1-symbol");
-        p1Computer = gameControls.querySelector("input[name='p1-human-or-ai']:checked");  // Ref: https://stackoverflow.com/questions/9618504/how-to-get-the-selected-radio-button-s-value
-        p1Imperfect = gameControls.querySelector("#p1-imperfect");
-        p2Name = gameControls.querySelector("#p2-name");
-        p2Symbol = gameControls.querySelector("#p2-symbol");
-        p2Computer = gameControls.querySelector("input[name='p2-human-or-ai']:checked");
-        p2Imperfect = gameControls.querySelector("#p2-imperfect");
-
         // Fill default values if nothing entered
         p1NameVal = String(p1Name.value) || "Player 1";
         p1SymbolVal = String(p1Symbol.value) || "X";
-        p1ComputerVal = String(p1Computer.value) || "human";
         p1ImperfectVal = Boolean(p1Imperfect.checked) || false;
         p2NameVal = String(p2Name.value) || "Player 2";
         p2SymbolVal = String(p2Symbol.value) || "O";
-        p2ComputerVal = String(p2Computer.value) || "human";
         p2ImperfectVal = Boolean(p2Imperfect.checked) || false;
+
+        // Ref: https://stackoverflow.com/a/41037200
+        p1ComputerVal = p1Computer.find(r => r.checked).value || "human"
+        p2ComputerVal = p2Computer.find(r => r.checked).value || "human"
 
         events.emit("clickedStart", {
             p1Name: p1NameVal,
@@ -110,6 +113,40 @@ const ui = (() => {
             p2Computer: p2ComputerVal,
             p2Imperfect: p2ImperfectVal,
         });
+    }
+
+    const clickedDemo = (e) => {
+        // Resets board and plays a demo game with random values and two imperfect ai's
+        events.emit("clickedReset", "")
+
+        const names = [
+            [["Dipper", "🧢"], ["Mabel", "🌈"]],
+            [["Wallace", "🧀"], ["Gromit", "🦴"]],
+            // ["Fry", "Bender"],
+            // ["Tom", "Jerry"],
+            // ["Finn", "Jake"],
+            // ["Stewie", "Brian"],
+            // ["Rick", "Morty"],
+            // ["Bart", "Lisa"],
+            // ["Shrek", "Donkey"],
+            // ["Garfield", "Odie"],
+            // ["Ralph", "Vanellope"],
+            // ["Itchy", "Scratchy"],
+            // ["R2D2", "C-3PO"],
+            // ["Mario", "Luigi"],
+            // ["Buzz", "Woody"],
+            // ["Bert", "Ernie"],
+            // ["Mickey", "Minnie"],
+            // ["Sherlock", "Watson"],
+            // ["Marlin", "Dory"],
+            // ["Calvin", "Hobbes"],
+            // ["Bluey", "Bingo"],
+        ]
+
+        const choice = names[Math.floor(Math.random()*(names.length))]
+        console.log(choice)
+
+        
     }
 
     const clickedReset = (e) => {
@@ -257,6 +294,8 @@ const ui = (() => {
 
     // Bind Events
     gameControls.querySelector("#start-game").addEventListener("click", clickedStart);
+
+    gameControls.querySelector("#demo-game").addEventListener("click", clickedDemo);
 
     gameControls.querySelector("#reset-game").addEventListener("click", clickedReset);
 
