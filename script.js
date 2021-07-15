@@ -60,7 +60,7 @@ const ui = (() => {
     const p1Ai = gameControls.querySelector("#p1-ai")
     const p2Ai = gameControls.querySelector("#p2-ai")
 
-    // Add symbols to select boxes in UI
+    // Data of random names and symbols used when "demo" button is pressed
     const names = [
         [["John Doe", "❌"], ["Richard Roe", "⭕"]],
         [["Alice", "🔑"], ["Bob", "🔒"]],
@@ -87,6 +87,7 @@ const ui = (() => {
         // ["Bluey", "Bingo"],
     ]
 
+    // Add symbols to select boxes in UI
     for (i=0; i<names.length; i++){
         const opt1 = document.createElement("option");
         opt1.value = names[i][0][1];
@@ -160,6 +161,8 @@ const ui = (() => {
         // Resets board and plays a demo game with random values and two imperfect ai's
         events.emit("clickedReset", "")
 
+        // Picks new random set of names
+        // To avoid repeats, loops until it picks one that doesn't match the current one
         let choice;
         do {
             choice = names[Math.floor(Math.random()*(names.length))]
