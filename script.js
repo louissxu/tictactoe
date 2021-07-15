@@ -217,7 +217,7 @@ const ui = (() => {
     }
 
     const clickedCell = (e) => {
-        events.emit("clickedCell", [
+        events.emit("humanClickedCell", [
             e.target.getAttribute("data-x-coordinate"),
             e.target.getAttribute("data-y-coordinate")
         ]);
@@ -706,16 +706,29 @@ const game = (() => {
 
     }
 
+    const humanClickedCell = (cell) => {
+        // Only allow through click if it is not an ai player's turn
+        if (!logic.player(state).isAi() === true) {
+            clickedCell(cell);
+        }
+    }
+
+    const aiClickedCell = (cell) => {
+        clickedCell(cell);
+    }
+
     const clickedCell = (cell) => {
         if (state.board.getBoard()[cell[1]][cell[0]] != null) {
             // Do nothing
         } else {
             state = logic.result(state, cell);
-        }
-        events.emit("boardUpdated", state);
-        events.emit("nextPlayerUpdated", logic.player(state));
 
-        resolveBoard();
+            events.emit("boardUpdated", state);
+            events.emit("nextPlayerUpdated", logic.player(state));
+    
+            resolveBoard();
+        }
+
     }
 
     const resetGame = () => {
@@ -741,14 +754,15 @@ const game = (() => {
                 } else {
                     nextMove = logic.minimax(state);
                 }
-                queuedNextTurn = setTimeout(() => {events.emit("clickedCell", nextMove)}, 200);
+                queuedNextTurn = setTimeout(() => {events.emit("aiClickedCell", nextMove)}, 200);
             }
         }
     }
 
     // Bind Events
     events.on("clickedStart", startGame);
-    events.on("clickedCell", clickedCell);
+    events.on("humanClickedCell", humanClickedCell);
+    events.on("aiClickedCell", aiClickedCell)
     events.on("clickedReset", resetGame);
     events.on("nextPlayerUpdated", checkForAiMove);
 
@@ -761,7 +775,6 @@ const game = (() => {
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
-// Disable board state or something while doing timeout wait (so you can't jump in and click a cell while the game is waiting)
 // have cells highlight the winning cells and only fade the losing cells when the game is won
 // fade out the entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
