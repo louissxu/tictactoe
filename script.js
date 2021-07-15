@@ -728,19 +728,15 @@ const game = (() => {
     const checkForAiMove = (_) => {
         if (!logic.terminal(state)) {
             const nextPlayer = logic.player(state)
-            if (nextPlayer.isAi() === true && nextPlayer.isImperfect() === false) {
-                const bestMove = logic.minimax(state);
-                setTimeout(() => {events.emit("clickedCell", bestMove)}, 200);
-            } else if (nextPlayer.isAi() === true && nextPlayer.isImperfect() === true) {
+            if (nextPlayer.isAi() === true) {
+                let nextMove;
                 const chance = Math.random();
-                if (chance < 0.1) {
-                    const nextMove = logic.randomAction(state)
-                    setTimeout(() => {events.emit("clickedCell", nextMove)}, 200)
+                if (nextPlayer.isImperfect() === true && chance < 0.1) {
+                    nextMove = logic.randomAction(state);
                 } else {
-                    const nextMove = logic.minimax(state)
-                    setTimeout(() => {events.emit("clickedCell", nextMove)}, 200)
+                    nextMove = logic.minimax(state);
                 }
-                
+                setTimeout(() => {events.emit("clickedCell", nextMove)}, 200);
             }
         }
     }
