@@ -757,16 +757,11 @@ const game = (() => {
 
 })();
 
-// Do button click animation
-// pretyfy colours and css (select boxes, headings, fonts)
+// Prettify  colours and css (select boxes, headings, fonts)
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
 // Restyle winning line thing (make translucent, less dominating visually)
-// Hard code an emoji font from a cdn so that it is consistent with the images (no tombstones, etc)
-// Make "random" button that auto picks some emojis and fills in random player names
-// disable board state or something while doing timeout wait (so you can't jump in and click a cell while the game is waiting)
-// change "random" to "demo"
-// add "imperfect ai" mode. so i can use that for demo so sometimes someone wins
+// Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
+// Disable board state or something while doing timeout wait (so you can't jump in and click a cell while the game is waiting)
 // have cells highlight the winning cells and only fade the losing cells when the game is won
-// fade out teh entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
+// fade out the entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
-// neaten up checkForAiMove function
