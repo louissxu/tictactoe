@@ -683,6 +683,8 @@ const game = (() => {
                         [null, null, null],
                         [null, null, null]];
 
+    let queuedNextTurn;
+
     const startGame = (data) => {
         const board = Board(emptyBoard);
         const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer, data.p1Imperfect);
@@ -721,6 +723,9 @@ const game = (() => {
         const p1 = Player();
         const p2 = Player();
         state = State(board, p1, p2);
+
+        clearTimeout(queuedNextTurn)
+
         events.emit("boardUpdated", state);
         events.emit("gameReset");
     }
@@ -736,7 +741,7 @@ const game = (() => {
                 } else {
                     nextMove = logic.minimax(state);
                 }
-                setTimeout(() => {events.emit("clickedCell", nextMove)}, 200);
+                queuedNextTurn = setTimeout(() => {events.emit("clickedCell", nextMove)}, 200);
             }
         }
     }
@@ -764,6 +769,4 @@ const game = (() => {
 // have cells highlight the winning cells and only fade the losing cells when the game is won
 // fade out teh entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
-// when you have have ai game playing and press reset it plays an extra turn. what is going on there?
 // neaten up checkForAiMove function
-// fix bug where delaying move means that move executes later if you reset and start new game within delay period. Replicate by mashing demo and letting it play out
