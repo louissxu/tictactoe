@@ -245,6 +245,8 @@ const ui = (() => {
     }
 
     const renderWinningPosition = (pairs) => {
+        // Render Winning Line
+
         // Geometric transforms
 
         // **Note** the transform values were calculated based on the final element size and grid gaps
@@ -288,6 +290,42 @@ const ui = (() => {
         canvas.style.display = "block";
     }
 
+    const renderWinningBoard = (state, enabledCells) => {
+        clearBoard();
+        const board = state.board.getBoard();
+
+        const membershipCheck = (members, elem) => {
+            for (let i=0; i<members.length; i++) {
+                if (elem[0] === members[i][0] && elem[1] === members[i][1]){
+                    return true
+                }
+            }
+            return false
+        }
+
+        for (let y = 0; y < board.length; y++) {
+            for (let x=0; x < board[y].length; x++) {
+                const cell = document.createElement("button");
+                cell.textContent = board[y][x];
+                cell.setAttribute("data-x-coordinate", x);
+                cell.setAttribute("data-y-coordinate", y);
+                cell.classList.add("cell")
+
+                if (membershipCheck(enabledCells, [x, y])) {
+                    cell.classList.add("active");
+                } else {
+                    cell.classList.add("inactive");
+                }
+
+                // if (board[y][x] != "") {
+                //     cell.setAttribute("disabled", "")
+                // }
+
+                gameBoard.appendChild(cell);
+            }
+        }
+    }
+
     const renderGameStart = () => {
         alertText.textContent = ""
         playerSettingsButtons.forEach((element) => element.setAttribute("disabled", ""));
@@ -298,7 +336,8 @@ const ui = (() => {
     const renderGameWon = (data) => {
         disableBoard();
         alertText.textContent = `${data.player.getName()} wins!`;
-        renderWinningPosition (data.pairs);
+        renderWinningBoard(data.state, data.enabledCells);
+        renderWinningPosition(data.pairs);
     }
 
     const renderGameDrawn = () => {
@@ -464,6 +503,49 @@ const logic = (() => {
         return State(newBoard, state.p1, state.p2);
     }
 
+    const winningCells = (pairs) => {
+        /**
+         * Takes a list of winning pairs, returns a list of coordinates of cells that make up the "won" cells. Returns empty list if no pairs provided
+         * @param {number[][][]} pairs - A list of pairs of cell coordinates that make a won line. ie [[[ix1, iy1], [ix2, iy2]], [[jx1, jy1], [jx2, jy2]]]
+         * @returns {number[][]} winningCells - list of coordinates of cells (if any) that make up the winning line(s). ie [[ax, ay], [bx, by], [cx, cy],...]
+         */
+
+
+        // Couldn't use Set becuase coordinates are stored as a coordinate object so two identical coordinates dont "match"
+        // (as they are not the same object despite having the same value)
+        const cellsList = []
+
+        for (let i=0; i<pairs.length; i++){
+            const start = pairs[i][0];
+            const end = pairs[i][1];
+            const middle = [(start[0]+end[0])/2, (start[1]+end[1])/2]
+
+            cellsList.push(start)
+            cellsList.push(middle)
+            cellsList.push(end)
+        }
+
+        const equivalent = (a, b) => {
+            if (a[0] === b[0] && a[1] === b[1]){
+                return true
+            }
+            return false
+        }
+
+        const uniqueCoordinates = cellsList.reduce((prev, curr) => {
+            for (let i=0; i<prev.length; i++) {
+                if (equivalent(prev[i], curr)) {
+                    return prev
+                }
+            }
+            return [...prev, curr]
+
+        }, [])
+
+        return uniqueCoordinates;
+
+    }
+
     const winner = (state) => {
         let winningSymbol = null;
         let winningPairs = [];
@@ -499,10 +581,15 @@ const logic = (() => {
             winningPairs.push([[0,2], [2,0]]);
         }
 
+        let wonCells
+        if (winningSymbol) {
+            wonCells = winningCells(winningPairs);
+        }
+
         if (winningSymbol === state.p1.getSymbol()) {
-            return {player: state.p1, pairs: winningPairs};
+            return {player: state.p1, pairs: winningPairs, state: state, enabledCells: wonCells};
         } else if (winningSymbol === state.p2.getSymbol()) {
-            return {player: state.p2, pairs: winningPairs};
+            return {player: state.p2, pairs: winningPairs, state: state, enabledCells: wonCells};
         } else {
             return null
         }
@@ -516,6 +603,11 @@ const logic = (() => {
         } else {
             return false;
         }
+    }
+
+    const randomAction = (state) => {
+        const availableActions = shuffled(actions(state))
+        return availableActions[0];
     }
 
     // AI Functions
@@ -651,14 +743,9 @@ const logic = (() => {
             }
         }
 
-        console.log(counter[0])
+        console.log(`Minimax iterations: ${counter[0]}`)
         return bestAction;
 
-    }
-
-    const randomAction = (state) => {
-        const availableActions = shuffled(actions(state))
-        return availableActions[0];
     }
 
     return {
@@ -749,7 +836,7 @@ const game = (() => {
             if (nextPlayer.isAi() === true) {
                 let nextMove;
                 const chance = Math.random();
-                if (nextPlayer.isImperfect() === true && chance < 0.1) {
+                if (nextPlayer.isImperfect() === true && chance < 0.3) {
                     nextMove = logic.randomAction(state);
                 } else {
                     nextMove = logic.minimax(state);
@@ -775,6 +862,6 @@ const game = (() => {
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
-// have cells highlight the winning cells and only fade the losing cells when the game is won
+// Decide on and pick winning cell colour. Losing cell colour and disabled cell colour and when to use each of these
 // fade out the entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2

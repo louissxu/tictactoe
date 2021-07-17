@@ -11,7 +11,7 @@ body {
     box-sizing: border-box;
 }
 
-button.button, button.cell {
+.button, .cell {
     border: none;
     background-color: transparent;
     font-family: inherit;
@@ -26,7 +26,7 @@ button.button, button.cell {
 $btnColour: rgba(47, 138, 199, 1);
 $disabledColour: rgb(189, 195, 199);
 
-button.button {
+.button {
     font-size: 16px;
     width: 140px;
     margin: 5px;
@@ -73,7 +73,7 @@ button.button {
 $cellColour: rgb(189, 195, 199);
 $cellDisabledColour: rgb(189, 195, 199);
 
-button.cell {
+.cell {
     background-color: $cellColour;
     border: none;
     font-size: 40px;
@@ -103,10 +103,21 @@ button.cell {
     }
 
     &:disabled {
-        background-color: $cellDisabledColour;
+        // background-color: $cellDisabledColour;
+        // color: rgba(16, 16, 16, 0.3);
         // opacity: 0.7;
         cursor: none;
     }
+}
+
+button.inactive {
+    background-color: $cellDisabledColour;
+    color: rgba(16, 16, 16, 0.3);
+    cursor: none;
+}
+
+button.active {
+    background-color: lightgreen;
 }
 
 // .cell:disabled {
