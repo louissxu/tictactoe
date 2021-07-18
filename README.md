@@ -31,7 +31,7 @@ In the game's controls there is also the option for "imperfect ai" which adds a 
 ### Optimisations
 Naive minimax is a slow algorithm. To get a result requires a full tree search of every possible move. To calculate a starting move requires ~550k calls to the minimax function.
 
-Alpha-beta pruning was added to the search strategy to decrease the number of unfruitful nodes that are searched. When a node is known to be less optimal than an adjacent, already searched node, it is discarded without being explored fully. With this optimisation the number of minimax calls to find a starting move is reduced to ~27k.
+Alpha-beta pruning can be added to the search strategy to decrease the number of unfruitful nodes that are searched. When a node is known to be less optimal than an adjacent, already searched node, it is discarded without being explored fully. With this optimisation the number of minimax calls to find a starting move is reduced to ~27k.
 
 Memoisation is another possible optimisation. By keeping a cache of calls that have been made, identical recursive calls can be avoided by returning the stored value rather than performing a repeat search of that subtree. This reduces the number of minimax calls to ~16k. However, this is at a cost of a cache that contains ~4.5k entries.
 
