@@ -2,6 +2,7 @@ $primaryColour: rgb(47, 138, 199);
 $secondaryColour: #2ecc71;
 $tertiaryColour: #bdc3c7;
 $mainBackgroundColour: #ECF0F1;
+$overlayFadeColour: rgba(64, 64, 64, 0.66);
 
 body {
     font-family: "Baloo 2", sans-serif;
@@ -195,6 +196,9 @@ h3 {
 
     background-color: $mainBackgroundColour;
     border-radius: 10px;
+
+    // Add for overlay wrapper to reference position off of
+    position: relative;
 }
 
 .n-container-players-content {
@@ -223,6 +227,9 @@ h3 {
 
     background-color: $mainBackgroundColour;
     border-radius: 10px;
+    
+    // Add for overlay wrapper to reference position off of
+    position: relative;
 }
 
 #game-board {
@@ -259,4 +266,24 @@ h3 {
 #canvas {
     display: none;
     position: absolute;
+}
+
+#n-container-game-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: $overlayFadeColour;
+}
+
+.n-container-players-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    background-color: $overlayFadeColour;
 }
