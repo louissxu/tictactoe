@@ -39,7 +39,7 @@ These optimisation strategies can be combined. However, this needs to be done ca
 
 With both alpha-beta pruning and memoisation enabled, the number of minimax calls is reduced to ~21k with a cache size of only ~0.5k entries.
 
-The number of calls to minimax, and the size of the memo cache is reported to console for curiosity.
+When a move is made, the number of calls to minimax, and the size of the memo cache, is reported to console for curiosity.
 
 #### Time and space used to calculate a first move
 Algorithm | Minimax calls | Memo entries
