@@ -5,8 +5,8 @@ Tic-Tac-Toe written in HTML/CSS/JS
 An interactive two player tic-tac-toe game with the option for one (or two) computer players.
 
 ## JavaScript
-All interactivity is written with client side javascript. Written with module pattern and factory functions with three primary modules.
 ### Primary Modules
+All interactivity is written with client side javascript. It is written with the module pattern with three primary modules.
 1. #### Logic Module
     Handles purely the tic-tac-toe logic. Written in a functional paradigm.
 2. #### UI Module
@@ -17,6 +17,15 @@ All interactivity is written with client side javascript. Written with module pa
 ### Ancillary Modules
 4. #### Pub/Sub Module
     Events are passed around the modules using an eventbus/pub-sub pattern which is handled by this module.
+
+### Factory Functions
+Factory functions are used to create the objects passed around the modules. These are used to create the Board objects, Player objects, and State objects.
+* #### Board Factory
+    Stores the current state of the game board.
+* #### Player Factory
+    Stores the player information and associated settings. Name, symbol, human/ai, etc.
+* #### State Factory
+    Stores The whole game state together (the board and the two players).
 
 ## AI Players
 ### Minimax
