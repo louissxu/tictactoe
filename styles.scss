@@ -2,6 +2,7 @@ $primaryColour: rgb(47, 138, 199);
 
 body {
     font-family: "Baloo 2", sans-serif;
+    margin: 0px;
 }
 
 /* Button Styling */
@@ -299,7 +300,7 @@ h3 {
 }
 
 #n-container-game{
-    flex: 1 0 300px;
+    flex: 1 0 320px;
 
     //temp
     height: 100px;
