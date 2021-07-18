@@ -62,23 +62,23 @@ const ui = (() => {
 
     // Data of random names and symbols used when "demo" button is pressed
     const names = [
-        [["John Doe", "❌"], ["Richard Roe", "⭕"]],
         [["Alice", "🔑"], ["Bob", "🔒"]],
         [["Dipper", "🧢"], ["Mabel", "🌈"]],
         [["Wallace", "🧀"], ["Gromit", "🦴"]],
         [["Fry", "🚀"], ["Bender", "🤖"]],
-        // ["Tom", "Jerry"],
-        // ["Finn", "Jake"],
+        [["Tom", "🐱"], ["Jerry", "🐭"]],
+        [["Finn", "🎒"], ["Jake", "🐶"]],
+        [["Ralph", "🏅"], ["Vanellope", "🦄"]],
+        [["Buzz", "🧑‍🚀"], ["Woody", "🤠"]],
+        [["Sven", "🦌"], ["Olaf", "☃️"]]
         // ["Stewie", "Brian"],
         // ["Rick", "Morty"],
         // ["Bart", "Lisa"],
         // ["Shrek", "Donkey"],
         // ["Garfield", "Odie"],
-        // ["Ralph", "Vanellope"],
         // ["Itchy", "Scratchy"],
         // ["R2D2", "C-3PO"],
         // ["Mario", "Luigi"],
-        // ["Buzz", "Woody"],
         // ["Bert", "Ernie"],
         // ["Mickey", "Minnie"],
         // ["Sherlock", "Watson"],
