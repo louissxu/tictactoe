@@ -1,4 +1,7 @@
 $primaryColour: rgb(47, 138, 199);
+$secondaryColour: #2ecc71;
+$tertiaryColour: #bdc3c7;
+$mainBackgroundColour: #ECF0F1;
 
 body {
     font-family: "Baloo 2", sans-serif;
@@ -71,7 +74,7 @@ $disabledColour: rgb(189, 195, 199);
     text-align: center;
 }
 
-$cellColour: rgb(189, 195, 199);
+$cellColour: scale-color(#7F8C8D, $lightness: 0%);
 $cellDisabledColour: rgb(189, 195, 199);
 
 .cell {
@@ -84,7 +87,7 @@ $cellDisabledColour: rgb(189, 195, 199);
 
     border-radius: 15px;
 
-    box-shadow: 0 9px #999;
+    box-shadow: 0 9px #555;
     
     &:hover {
         background-color: scale-color($cellColour, $lightness: 20%);
@@ -92,7 +95,7 @@ $cellDisabledColour: rgb(189, 195, 199);
 
     &:active {
         background-color: scale-color($cellColour, $lightness: -25%, $saturation: -0%);
-        box-shadow: 0 5px #666;
+        box-shadow: 0 5px #333;
         transform: translateY(4px);
     }
 
@@ -104,30 +107,33 @@ $cellDisabledColour: rgb(189, 195, 199);
     }
 
     &:disabled {
-        // background-color: $cellDisabledColour;
-        // color: rgba(16, 16, 16, 0.3);
-        // opacity: 0.7;
+        background-color: $cellDisabledColour;
+        color: rgba(16, 16, 16, 0.3);
+        opacity: 0.7;
         cursor: none;
+
+        box-shadow: 0 9px #999
     }
 }
 
 button.inactive {
-    background-color: $cellDisabledColour;
-    color: rgba(16, 16, 16, 0.3);
-    cursor: none;
+    // background-color: $cellDisabledColour;
+    // color: rgba(16, 16, 16, 0.3);
+    // cursor: none;
 }
 
-button.active {
-    background-color: lightgreen;
+button.active:disabled {
+    background-color: $secondaryColour;
+    color: rgb(0,0,0);
 }
 
 .player-input-field {
     font-size: 16px;
     padding: 4px;
     margin-bottom: 4px;
-    /* border: 0; */
-    /* border-bottom: 1px solid #eee; */
-    background-color: lightseagreen;
+
+    border: 2px solid $tertiaryColour;
+    border-radius: 6px;
 }
 
 h3 {
@@ -138,47 +144,41 @@ h3 {
     max-width: 600px;
     margin: 0px auto 0px auto;
 
-    min-height: 95vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-
-    //temp
-    //change min-height to 100vh;
-    background-color: blue;
 }
 
 #n-spacer-top {
     max-height: 100px;
     flex-grow: 0.5;
-
-    //temp for layout
-    width: 100px;
-    background-color: green;
 }
 
 #n-spacer-bottom {
-    // height: 200px;
     flex-grow: 1;
-
-    //temp for layout
-    width: 100px;
-    background-color: green;
 }
 
 #n-container-main {
-    max-width: 600px;
+    max-width: 620px;
     
     display: flex;
     flex-wrap: wrap;
 
-    // Temp for layout
-    // min-width: 100px;
-    background-color: red;
+    background-color: #BDC3C7;
+
+    box-sizing: content-box;
+    border: 5px solid #BDC3C7;
+    border-radius: 20px;
 }
 
 #n-container-header {
     flex: 0 1 600px;
     text-align: center;
+
+    margin: 5px;
+
+    background-color: $mainBackgroundColour;
+    border-radius: 10px;
 }
 
 #n-container-controls {
@@ -186,25 +186,21 @@ h3 {
 
     display: flex;
     flex-wrap: wrap;
-
-    //temp
-    background-color: sienna;
 }
 
 .n-container-players {
     flex: 1 1 200px;
 
-    //temp
-    background-color: yellow;
-    border: solid 1px red;
+    margin: 5px;
+
+    background-color: $mainBackgroundColour;
+    border-radius: 10px;
 }
 
 .n-container-players-content {
     margin: 5px auto 5px auto;
     padding: 5px;
     width: 200px;
-    background-color: purple;
-
 }
 
 .n-container-buttons {
@@ -212,21 +208,26 @@ h3 {
     text-align: center;
     padding: 5px;
 
-    //temp
-    background-color: orange;
+    margin: 5px;
+    
+    background-color: $mainBackgroundColour;
+    border-radius: 10px;
 }
 
 #n-container-game{
-    flex: 1 0 320px;
+    flex: 1 0 300px;
     text-align: center;
 
-    //temp
-    background-color: purple;
+    margin: 5px;
+    padding: 0px;
+
+    background-color: $mainBackgroundColour;
+    border-radius: 10px;
 }
 
 #game-board {
     width: 300px;
-    height: 330px;
+    height: 350px;
     
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -234,10 +235,11 @@ h3 {
     
     grid-column-gap: 3px;
     grid-row-gap: 12px;
-    background-color: white;
-
-    padding: 5px;
-    margin: 5px auto 5px auto;
+    // background-color: white;
+    
+    margin: 0px auto 0px auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 #game-alerts {
@@ -245,15 +247,12 @@ h3 {
     padding: 5px;
     margin: 5px auto 5px auto;
     text-align: center;
-
-    //temp
-    background-color: lightgoldenrodyellow;
 }
 
 #container-canvas {
     position: relative;
     width: 300px;
-    top: -335px;
+    top: -340px;
     margin: 0px auto 0px auto;
 }
 

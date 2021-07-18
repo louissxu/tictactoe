@@ -47,37 +47,36 @@ body {
   text-align: center; }
 
 .cell {
-  background-color: #bdc3c7;
+  background-color: #7f8c8d;
   border: none;
   font-size: 40px;
   text-align: center;
   transition: 100ms all ease-in-out;
   border-radius: 15px;
-  box-shadow: 0 9px #999; }
+  box-shadow: 0 9px #555; }
   .cell:hover {
-    background-color: #cacfd2; }
+    background-color: #99a3a4; }
   .cell:active {
-    background-color: #89939a;
-    box-shadow: 0 5px #666;
+    background-color: #5f696a;
+    box-shadow: 0 5px #333;
     transform: translateY(4px); }
   .cell:disabled {
-    cursor: none; }
+    background-color: #bdc3c7;
+    color: rgba(16, 16, 16, 0.3);
+    opacity: 0.7;
+    cursor: none;
+    box-shadow: 0 9px #999; }
 
-button.inactive {
-  background-color: #bdc3c7;
-  color: rgba(16, 16, 16, 0.3);
-  cursor: none; }
-
-button.active {
-  background-color: lightgreen; }
+button.active:disabled {
+  background-color: #2ecc71;
+  color: black; }
 
 .player-input-field {
   font-size: 16px;
   padding: 4px;
   margin-bottom: 4px;
-  /* border: 0; */
-  /* border-bottom: 1px solid #eee; */
-  background-color: lightseagreen; }
+  border: 2px solid #bdc3c7;
+  border-radius: 6px; }
 
 h3 {
   margin: 0px; }
@@ -85,83 +84,87 @@ h3 {
 #n-spacer-container {
   max-width: 600px;
   margin: 0px auto 0px auto;
-  min-height: 95vh;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  background-color: blue; }
+  flex-direction: column; }
 
 #n-spacer-top {
   max-height: 100px;
-  flex-grow: 0.5;
-  width: 100px;
-  background-color: green; }
+  flex-grow: 0.5; }
 
 #n-spacer-bottom {
-  flex-grow: 1;
-  width: 100px;
-  background-color: green; }
+  flex-grow: 1; }
 
 #n-container-main {
-  max-width: 600px;
+  max-width: 620px;
   display: flex;
   flex-wrap: wrap;
-  background-color: red; }
+  background-color: #BDC3C7;
+  box-sizing: content-box;
+  border: 5px solid #BDC3C7;
+  border-radius: 20px; }
 
 #n-container-header {
   flex: 0 1 600px;
-  text-align: center; }
+  text-align: center;
+  margin: 5px;
+  background-color: #ECF0F1;
+  border-radius: 10px; }
 
 #n-container-controls {
   flex: 1 0 200px;
   display: flex;
-  flex-wrap: wrap;
-  background-color: sienna; }
+  flex-wrap: wrap; }
 
 .n-container-players {
   flex: 1 1 200px;
-  background-color: yellow;
-  border: solid 1px red; }
+  margin: 5px;
+  background-color: #ECF0F1;
+  border-radius: 10px; }
 
 .n-container-players-content {
   margin: 5px auto 5px auto;
   padding: 5px;
-  width: 200px;
-  background-color: purple; }
+  width: 200px; }
 
 .n-container-buttons {
   flex: 1 1 600px;
   text-align: center;
   padding: 5px;
-  background-color: orange; }
+  margin: 5px;
+  background-color: #ECF0F1;
+  border-radius: 10px; }
 
 #n-container-game {
-  flex: 1 0 320px;
+  flex: 1 0 300px;
   text-align: center;
-  background-color: purple; }
+  margin: 5px;
+  padding: 0px;
+  background-color: #ECF0F1;
+  border-radius: 10px; }
 
 #game-board {
   width: 300px;
-  height: 330px;
+  height: 350px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr 0px;
   grid-column-gap: 3px;
   grid-row-gap: 12px;
-  background-color: white;
-  padding: 5px;
-  margin: 5px auto 5px auto; }
+  margin: 0px auto 0px auto;
+  padding-top: 10px;
+  padding-bottom: 10px; }
 
 #game-alerts {
   width: 300px;
   padding: 5px;
   margin: 5px auto 5px auto;
-  text-align: center;
-  background-color: lightgoldenrodyellow; }
+  text-align: center; }
 
 #container-canvas {
   position: relative;
   width: 300px;
-  top: -335px;
+  top: -340px;
   margin: 0px auto 0px auto; }
 
 #canvas {
