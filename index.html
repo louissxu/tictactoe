@@ -15,45 +15,17 @@
     <title>Tic-Tac-Toe</title>
 </head>
 
-<header>
-    <h1>Tic-Tac-Toe</h1>
-</header>
-
 <body>
     <div id="n-spacer-container">
         <div id="n-spacer-top">
-            Top spacer
         </div>
         <div id="n-container-main">
             <div id="n-container-header">
-                Header
+                <h1>Tic-Tac-Toe</h1>
             </div>
             <div id="n-container-controls">
                 <div class="n-container-players">
-                    Player 1
-                </div>
-                <div class="n-container-players">
-                    Player 2
-                </div>
-                <div class="n-container-buttons">
-                    Control buttons
-                </div>
-            </div>
-            <div id="n-container-game">
-                Game board
-            </div>
-        </div>
-        <div id="n-spacer-bottom">
-            Bottom spacer
-        </div>
-    </div>
-
-
-    <div id="container-main">
-        <div id="container-controls">
-            <div id="game-controls">
-                <div class="game-controls-cell">
-                    <div class="subcell">
+                    <div class="n-container-players-content">
                         <h3>Player 1</h3>
                         <input class="player-input-field" type="text" id="p1-name" name="p1-name" size=10 placeholder="Player 1's name"> - 
                         <select class="player-input-field" id="p1-symbol" name="p1-symbol"><br>
@@ -71,8 +43,8 @@
                         <label for="p1-imperfect">Imperfect AI</label><br>
                     </div>
                 </div>
-                <div class="game-controls-cell">
-                    <div class="subcell">
+                <div class="n-container-players">
+                    <div class="n-container-players-content">
                         <h3>Player 2</h3> 
                         <input class="player-input-field" type="text" id="p2-name" name="p2-name" size=10 placeholder="Player 2's name"> - 
                         <select class="player-input-field" type="text" id="p2-symbol"><br>
@@ -90,27 +62,55 @@
                         <label for="p2-imperfect">Imperfect AI</label><br>
                     </div>
                 </div>
-                <div class="game-controls-cell">
-                    <div class="subcell button-subcell">
-                        <button class="button" id="start-game">Start Game</button><br>
-                        <button class="button" id="demo-game">Play Demo</button><br>
-                        <button class="button" id="reset-game">Reset Game</button>
-                    </div>
+                <div class="n-container-buttons">
+                    <button class="button" id="start-game">Start Game</button><br>
+                    <button class="button" id="demo-game">Play Demo</button><br>
+                    <button class="button" id="reset-game">Reset Game</button>
                 </div>
             </div>
-        </div>
-        <div id="container-board">
-            <div id="subcontainer-board">
+            <div id="n-container-game">
                 <div id="game-board">
                     <!-- Cells inserted here -->
                 </div>
                 <div id="container-canvas">
                     <canvas id="canvas" height="330" width="300"></canvas>
                 </div>
+                <div id="game-alerts">
+                    <h3 id="alert-text"></h3> 
+                </div>
             </div>
-            <div id="game-alerts">
-                <h3 id="alert-text"></h3> 
+        </div>
+        <div id="n-spacer-bottom">
+        </div>
+    </div>
+
+
+    <div id="container-main">
+        <div id="container-controls">
+            <div id="game-controls">
+                <div class="game-controls-cell">
+                    <div class="subcell">
+                        
+                    </div>
+                </div>
+                <div class="game-controls-cell">
+                    <div class="subcell">
+                        
+                    </div>
+                </div>
+                <div class="game-controls-cell">
+                    <div class="subcell button-subcell">
+                        
+                    </div>
+                </div>
             </div>
+        </div>
+        <div id="container-board">
+            <div id="subcontainer-board">
+
+
+            </div>
+
         </div>
     </div>
 </body>

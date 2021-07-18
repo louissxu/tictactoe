@@ -38,7 +38,7 @@ const ui = (() => {
 
     // Cache DOM
     const gameBoard = document.querySelector("#game-board");
-    const gameControls = document.querySelector("#game-controls");
+    const gameControls = document.querySelector("#n-container-controls");
     const alertText = document.querySelector("#alert-text");
 
     const startGameButton = gameControls.querySelector("#start-game");
