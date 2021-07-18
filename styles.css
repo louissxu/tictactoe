@@ -198,13 +198,13 @@ h3 {
   flex: 0 1 600px; }
 
 #n-container-controls {
-  flex: 2 0 200px;
+  flex: 1 0 200px;
   display: flex;
   flex-wrap: wrap;
   background-color: sienna; }
 
 #n-container-game {
-  flex: 1 0 320px;
+  flex: 1 0 300px;
   height: 100px;
   background-color: purple; }
 
