@@ -6,15 +6,16 @@ An interactive two player tic-tac-toe game with the option for one (or two) comp
 
 ## JavaScript
 All interactivity is written with client side javascript. Written with module pattern and factory functions with three primary modules.
-1. ### Logic Module
+### Primary Modules
+1. #### Logic Module
     Handles purely the tic-tac-toe logic. Written in a functional paradigm.
-2. ### UI Module
+2. #### UI Module
     Handles the UI interface, player names/symbols, button presses, board rendering etc.
-3. ### Game Module
+3. #### Game Module
     Handles the game interaction. Starting the game, ending the game, what the buttons do, etc.
 
 ### Ancillary Modules
-4. ### Pub/Sub Module
+4. #### Pub/Sub Module
     Events are passed around the modules using an eventbus/pub-sub pattern which is handled by this module.
 
 ## AI Players
