@@ -77,8 +77,9 @@ $disabledColour: rgb(189, 195, 199);
     }
 
     &:disabled {
-        background-color: $disabledColour;
-        opacity: 0.7;
+        // background-color: $disabledColour;
+        background-color: $btnColour;
+        opacity: 0.3;
         cursor: none;
     }
 }
@@ -298,5 +299,5 @@ h3 {
 }
 
 .fade-out {
-    opacity: 0.5
+    opacity: 0.6;
 }

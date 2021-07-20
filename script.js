@@ -47,6 +47,9 @@ const ui = (() => {
 
     const canvas = document.querySelector("#canvas");
 
+    const gameContainer = document.querySelector("#n-container-game");
+    const playerControlsContainers = Array.from(document.getElementsByClassName("n-container-players"));
+
     // Cache game Controls DOM
     const p1Name = gameControls.querySelector("#p1-name");
     const p1Symbol = gameControls.querySelector("#p1-symbol");
@@ -332,6 +335,9 @@ const ui = (() => {
         playerSettingsButtons.forEach((element) => element.setAttribute("disabled", ""));
         startGameButton.setAttribute("disabled", "");
         resetGameButton.removeAttribute("disabled");
+
+        gameContainer.classList.remove("fade-out");
+        playerControlsContainers.forEach((el) => el.classList.add("fade-out"));
     }
 
     const renderGameWon = (data) => {
@@ -356,6 +362,9 @@ const ui = (() => {
 
         clearCanvas();
         canvas.style.display = "none";
+
+        gameContainer.classList.add("fade-out");
+        playerControlsContainers.forEach((el) => el.classList.remove("fade-out"));
     }
 
     const renderPlayerUpdated = (player) => {
@@ -864,7 +873,6 @@ const game = (() => {
 // Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
 // Decide on and pick winning cell colour. Losing cell colour and disabled cell colour and when to use each of these
-// fade out the entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
 // clean up comments
 // add js doc strings

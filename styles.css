@@ -45,8 +45,8 @@ body {
     outline-color: transparent;
     box-shadow: 0 0 0 3px #94c5e6; }
   .button:disabled {
-    background-color: #bdc3c7;
-    opacity: 0.7;
+    background-color: #2f8ac7;
+    opacity: 0.3;
     cursor: none; }
 
 .button-subcell {
@@ -178,4 +178,4 @@ h3 {
   position: absolute; }
 
 .fade-out {
-  opacity: 0.5; }
+  opacity: 0.6; }
