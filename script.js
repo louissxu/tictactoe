@@ -866,7 +866,6 @@ const game = (() => {
 // Decide on and pick winning cell colour. Losing cell colour and disabled cell colour and when to use each of these
 // fade out the entire game board when the game is disabled or needs to be reset. make it more obvious that it is disabled
 // check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
-// Fix the double borders
 // clean up comments
 // add js doc strings
 // neaten up script

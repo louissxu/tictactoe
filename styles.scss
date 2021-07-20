@@ -167,27 +167,41 @@ h3 {
     flex-grow: 1;
 }
 
+// Simulate collapsing borders by using parent-child border alignment
+// REF: https://stackoverflow.com/questions/35678353/how-to-create-collapsed-borders-around-flex-items-and-their-container
+
+// Had to use margin because transparent border shows the element's background colour not through to the background itself
+
+@mixin parent-border {
+    // border-style: solid;
+    // border-color: transparent;
+    // border-width: 5px 0 0 5px;
+    margin: 5px 0 0 5px;
+}
+
+@mixin child-border {
+    // border-style: solid;
+    // border-color: transparent;
+    // border-width: 0 5px 5px 0;
+    margin: 0 5px 5px 0;
+}
+
 #n-container-main {
     max-width: 620px;
     
     display: flex;
     flex-wrap: wrap;
 
-    // background-color: #BDC3C7;
-
-    box-sizing: content-box;
-    // border: 5px solid #BDC3C7;
-    // border-radius: 20px;
+    @include parent-border;
 }
 
 #n-container-header {
     flex: 0 1 600px;
     text-align: center;
 
-    margin: 5px;
-
     background-color: $mainBackgroundColour;
-    // border-radius: 10px;
+
+    @include child-border;
 }
 
 #n-container-controls {
@@ -200,10 +214,9 @@ h3 {
 .n-container-players {
     flex: 1 1 200px;
 
-    margin: 5px;
-
     background-color: $mainBackgroundColour;
-    // border-radius: 10px;
+
+    @include child-border;
 }
 
 .n-container-players-content {
@@ -216,22 +229,21 @@ h3 {
     flex: 1 1 600px;
     text-align: center;
     padding: 5px;
-
-    margin: 5px;
     
     background-color: $mainBackgroundColour;
-    // border-radius: 10px;
+
+    @include child-border;
 }
 
 #n-container-game{
     flex: 1 0 300px;
     text-align: center;
 
-    margin: 5px;
     padding: 5px;
 
     background-color: $mainBackgroundColour;
-    // border-radius: 10px;
+
+    @include child-border;
 }
 
 #game-board {
