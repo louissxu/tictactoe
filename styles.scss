@@ -141,15 +141,6 @@ button.active:disabled {
     color: rgb(0,0,0);
 }
 
-.player-input-field {
-    font-size: 16px;
-    padding: 4px;
-    margin-bottom: 4px;
-
-    border: 1px solid $tertiaryColour;
-    border-radius: 4px;
-}
-
 h1 {
     font-weight: 400;
     font-size: 2rem;
@@ -206,6 +197,7 @@ h3 {
     max-width: 620px;
     
     display: flex;
+    flex-direction: row-reverse;
     flex-wrap: wrap;
 
     @include parent-border;
@@ -221,14 +213,15 @@ h3 {
 }
 
 #n-container-controls {
-    flex: 1 0 200px;
+    flex: 1 0 220px;
 
     display: flex;
     flex-wrap: wrap;
 }
 
 .n-container-players {
-    flex: 1 1 200px;
+    flex: 1 1 220px;
+    padding: 5px;
 
     background-color: $mainBackgroundColour;
 
@@ -238,7 +231,7 @@ h3 {
 .n-container-players-content {
     margin: 5px auto 5px auto;
     padding: 5px;
-    width: 200px;
+    width: 220px;
 }
 
 .n-container-buttons {
@@ -300,4 +293,16 @@ h3 {
 
 .fade-out {
     opacity: 0.6;
+}
+
+
+
+
+.player-input-field {
+    font-size: 16px;
+    padding: 4px;
+    margin-bottom: 4px;
+
+    border: 1px solid $tertiaryColour;
+    border-radius: 4px;
 }

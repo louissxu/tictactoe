@@ -23,11 +23,25 @@
             <div id="n-container-header">
                 <h1>Tic-Tac-Toe</h1>
             </div>
+            <div id="n-container-game">
+                <div id="game-board">
+                    <!-- Cells inserted here -->
+                </div>
+                <div id="container-canvas">
+                    <canvas id="canvas" height="330" width="300"></canvas>
+                </div>
+                <div id="game-alerts">
+                    <h3 id="alert-text"></h3> 
+                </div>
+            </div>
             <div id="n-container-controls">
                 <div class="n-container-players">
                     <div class="n-container-players-content">
                         <h3>Player 1</h3>
-                        <input class="player-input-field" type="text" id="p1-name" name="p1-name" size=10 placeholder="Player 1's name">
+                        <div class="custom-input">
+                            <input type="text" id="p1-name" name="p1-name" size=10 placeholder="Player 1's name">
+                            <label for="p1-name">Player 1 Name</label>
+                        </div>  
                         <select class="player-input-field" id="p1-symbol" name="p1-symbol"><br>
                             <!-- <option value="X">X</option> -->
                             <option value="❌">❌</option>
@@ -66,17 +80,6 @@
                     <button class="button" id="start-game">Start Game</button><br>
                     <button class="button" id="demo-game">Play Demo</button><br>
                     <button class="button" id="reset-game">Reset Game</button>
-                </div>
-            </div>
-            <div id="n-container-game">
-                <div id="game-board">
-                    <!-- Cells inserted here -->
-                </div>
-                <div id="container-canvas">
-                    <canvas id="canvas" height="330" width="300"></canvas>
-                </div>
-                <div id="game-alerts">
-                    <h3 id="alert-text"></h3> 
                 </div>
             </div>
         </div>
