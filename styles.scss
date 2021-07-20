@@ -121,12 +121,12 @@ $cellDisabledColour: rgb(189, 195, 199);
     }
 
     &:disabled {
-        background-color: $cellDisabledColour;
-        color: rgba(16, 16, 16, 0.3);
+        // background-color: $cellDisabledColour;
+        color: rgba(16, 16, 16, 0.8);
         opacity: 0.7;
         cursor: none;
 
-        box-shadow: 0 9px #999
+        box-shadow: 0 9px #777
     }
 }
 
@@ -146,8 +146,8 @@ button.active:disabled {
     padding: 4px;
     margin-bottom: 4px;
 
-    border: 2px solid $tertiaryColour;
-    border-radius: 6px;
+    border: 1px solid $tertiaryColour;
+    border-radius: 4px;
 }
 
 h1 {

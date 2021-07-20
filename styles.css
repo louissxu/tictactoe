@@ -67,11 +67,10 @@ body {
     box-shadow: 0 5px #333;
     transform: translateY(4px); }
   .cell:disabled {
-    background-color: #bdc3c7;
-    color: rgba(16, 16, 16, 0.3);
+    color: rgba(16, 16, 16, 0.8);
     opacity: 0.7;
     cursor: none;
-    box-shadow: 0 9px #999; }
+    box-shadow: 0 9px #777; }
 
 button.active:disabled {
   background-color: #2ecc71;
@@ -81,8 +80,8 @@ button.active:disabled {
   font-size: 16px;
   padding: 4px;
   margin-bottom: 4px;
-  border: 2px solid #bdc3c7;
-  border-radius: 6px; }
+  border: 1px solid #bdc3c7;
+  border-radius: 4px; }
 
 h1 {
   font-weight: 400;
