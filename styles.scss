@@ -5,7 +5,8 @@ $mainBackgroundColour: #ECF0F1;
 $overlayFadeColour: rgba(64, 64, 64, 0.66);
 
 body {
-    font-family: "Baloo 2", sans-serif;
+    font-family: "Open Sans", sans-serif;
+    font-size: 0.875rem;
     margin: 0px;
 
     // Textured background. SVG directly encoded
@@ -40,7 +41,10 @@ $btnColour: rgba(47, 138, 199, 1);
 $disabledColour: rgb(189, 195, 199);
 
 .button {
-    font-size: 16px;
+    font-size: 0.875rem;
+    letter-spacing: 1.25;
+    font-weight: 500;
+
     width: 140px;
     margin: 5px;
 
@@ -145,8 +149,16 @@ button.active:disabled {
     border-radius: 6px;
 }
 
+h1 {
+    font-weight: 400;
+    font-size: 2rem;
+}
+
 h3 {
     margin: 0px;
+    font-weight: 500;
+    font-size: 1.25rem;
+    letter-spacing: 0;
 }
 
 #n-spacer-container {
@@ -172,18 +184,21 @@ h3 {
 
 // Had to use margin because transparent border shows the element's background colour not through to the background itself
 
+// Also adapted to use MDN description of "gutters"
+// REF: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Mastering_Wrapping_of_Flex_Items
+
 @mixin parent-border {
     // border-style: solid;
     // border-color: transparent;
     // border-width: 5px 0 0 5px;
-    margin: 5px 0 0 5px;
+    margin: 2.5px;
 }
 
 @mixin child-border {
     // border-style: solid;
     // border-color: transparent;
     // border-width: 0 5px 5px 0;
-    margin: 0 5px 5px 0;
+    margin: 2.5px;
 }
 
 #n-container-main {
