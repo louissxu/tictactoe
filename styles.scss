@@ -4,15 +4,20 @@ $tertiaryColour: #7F8C8D;
 $mainBackgroundColour: #ECF0F1;
 $overlayFadeColour: rgba(64, 64, 64, 0.66);
 
+$cellColour: $tertiaryColour;
+
+* {
+    box-sizing: border-box;
+}
+
 body {
     font-family: "Open Sans", sans-serif;
     font-size: 0.875rem;
     margin: 0px;
 
-    // Textured background. SVG directly encoded
-    // REF: https://stackoverflow.com/questions/10768451/inline-svg-in-css
-    // REF: https://yoksel.github.io/url-encoder/
-    
+    // Textured background. SVG designed in illustrator then SVG code directly encoded
+    // Ref: https://stackoverflow.com/questions/10768451/inline-svg-in-css
+    // Ref: https://yoksel.github.io/url-encoder/
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='16' viewBox='0 0 32 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23303030; %7D .cls-2 %7B fill: %23404040; %7D .cls-3 %7B fill: none; stroke: %23404040; stroke-linecap: round; stroke-miterlimit: 10; %7D %3C/style%3E%3C/defs%3E%3Ctitle%3EBackground%3C/title%3E%3Cg id='Background' data-name='Background'%3E%3Crect class='cls-1' width='32' height='16'/%3E%3C/g%3E%3Cg id='Texture' data-name='Texture'%3E%3Cpath class='cls-2' d='M12.5,10.5a2,2,0,1,1-2,2,2,2,0,0,1,2-2m0-1a3,3,0,1,0,3,3,3,3,0,0,0-3-3Z'/%3E%3Cpath class='cls-2' d='M28.5,10.5a2,2,0,1,1-2,2,2,2,0,0,1,2-2m0-1a3,3,0,1,0,3,3,3,3,0,0,0-3-3Z'/%3E%3Cline class='cls-3' x1='22.97' y1='6.97' x2='18.03' y2='2.03'/%3E%3Cline class='cls-3' x1='22.97' y1='2.03' x2='18.03' y2='6.97'/%3E%3Cline class='cls-3' x1='4.5' y1='8' x2='4.5' y2='1'/%3E%3Cline class='cls-3' x1='8' y1='4.5' x2='1' y2='4.5'/%3E%3C/g%3E%3C/svg%3E%0A");
     background-repeat: repeat;
     background-attachment: fixed;
@@ -20,10 +25,6 @@ body {
 
 /* Button Styling */
 /* Ref: https://moderncss.dev/css-button-styling-guide/ */
-
-* {
-    box-sizing: border-box;
-}
 
 .button, .cell {
     border: none;
@@ -37,22 +38,18 @@ body {
     justify-content: center;
 }
 
-$btnColour: rgba(47, 138, 199, 1);
-$disabledColour: rgb(189, 195, 199);
-
 .button {
     font-size: 0.875rem;
     letter-spacing: 1.25;
     font-weight: 500;
     margin: 5px;
 
-    background-color: $btnColour;
+    background-color: $primaryColour;
     color: #fff;
     border-radius: 4px;
     // box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
 
-    padding: 0.25em 0.75em;
-    // min-width: 64dp;
+    padding: 5px 12px;
     width: 100px;
     min-height: 36px;
 
@@ -62,29 +59,24 @@ $disabledColour: rgb(189, 195, 199);
     transition: 100ms all ease-in-out;
 
     &:hover {
-        background-color: scale-color($btnColour, $lightness: 20%);
+        background-color: scale-color($primaryColour, $lightness: 20%);
     }
 
     &:active {
-        background-color: scale-color($btnColour, $lightness: -25%, $saturation: -0%);
+        background-color: scale-color($primaryColour, $lightness: -25%, $saturation: -0%);
     }
 
     &:focus {
         outline-style: solid;
         outline-color: transparent;
-        box-shadow: 0 0 0 3px scale-color($btnColour, $lightness: 50%);
+        box-shadow: 0 0 0 3px scale-color($primaryColour, $lightness: 50%);
     }
 
     &:disabled {
-        // background-color: $disabledColour;
-        background-color: $btnColour;
+        background-color: $primaryColour;
         opacity: 0.3;
         cursor: none;
     }
-}
-
-.button-subcell {
-    text-align: center;
 }
 
 #demo-game {
@@ -105,15 +97,11 @@ $disabledColour: rgb(189, 195, 199);
     }
 
     &:disabled {
-        // background-color: $disabledColour;
         background-color: $secondaryColour;
         opacity: 0.3;
         cursor: none;
     }
 }
-
-$cellColour: scale-color(#7F8C8D, $lightness: 0%);
-$cellDisabledColour: rgb(189, 195, 199);
 
 .cell {
     background-color: $cellColour;
@@ -314,6 +302,17 @@ h3 {
 #canvas {
     display: none;
     position: absolute;
+}
+
+#n-container-footer {
+    flex: 0 1 600px;
+    text-align: center;
+
+    background-color: $mainBackgroundColour;
+
+    padding: 5px;
+
+    @include child-border;
 }
 
 .fade-out {

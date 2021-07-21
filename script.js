@@ -877,3 +877,4 @@ const game = (() => {
 // clean up comments
 // add js doc strings
 // neaten up script
+// Add link to github repo

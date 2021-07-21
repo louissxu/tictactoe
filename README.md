@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 
-Tic-Tac-Toe written in HTML/CSS/JS
+Tic-Tac-Toe written in HTML/CSS/JS.
 
 An interactive two player tic-tac-toe game with the option for one (or two) computer players.
 
@@ -65,4 +65,4 @@ The controls and zones are laid out with CSS flexbox. The design is responsive w
 
 CSS is written in Sass and compiled to plain CSS using node-sass via a VS Code build script.
 
-UX design from a mix of sources. Some loosely based on material design components. All coded in plain css without use of premade design/component library.
+UX design from a mix of sources. Some loosely based on material design components. All coded in plain css without the use of a front-end framework.
