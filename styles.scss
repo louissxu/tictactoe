@@ -1,6 +1,6 @@
 $primaryColour: rgb(47, 138, 199);
 $secondaryColour: #2ecc71;
-$tertiaryColour: #bdc3c7;
+$tertiaryColour: #7F8C8D;
 $mainBackgroundColour: #ECF0F1;
 $overlayFadeColour: rgba(64, 64, 64, 0.66);
 
@@ -295,7 +295,73 @@ h3 {
     opacity: 0.6;
 }
 
+// Input field styling
+.custom-input {
+    position: relative;
+    margin: 8px 0;
+    display: inline-block;
 
+    & input[type=text] {
+        background: transparent;
+        border: solid 1px $tertiaryColour;
+        border-radius: 4px;
+
+        padding: 6px 6px 6px 6px;
+        // transition: padding 0.2s;
+
+        font-size: 16px;
+    }
+
+    & input[type=text]:placeholder-shown + label {
+        color: $tertiaryColour;
+        font-size: 16px;
+        left: 6px;
+        top: 6px;
+    }
+
+    & label,
+    input[type=text]:focus + label {
+        color: $primaryColour;
+        background-color: $mainBackgroundColour;
+        padding: 0 4px;
+        font-size: 8px;
+        position: absolute;
+        left: 6px;
+        top: -6px;
+        pointer-events: none;
+        transition: top 0.2s, left 0.2s, font-size 0.2s;
+    }
+
+    & input[type=text]::placeholder {
+        color: transparent;
+        display: none;
+    }
+
+    & input[type=text]:focus {
+        border: solid 1px $primaryColour;
+        outline: none;
+    }
+
+    & input[type=text]:not(:focus) + label {
+        color: $tertiaryColour;
+    }
+
+    // & input[type=select] {
+    // }
+}
+
+
+
+
+// label, input[type=text]:focus + label {
+//     color: #4476bd;
+//     font-size: 12px;
+//     left: 2px;
+//     pointer-events: none;
+//     position: absolute;
+//     top: 2px;
+//     transition: top 0.4s, left 0.4s, font-size 0.4s;
+// }
 
 
 .player-input-field {

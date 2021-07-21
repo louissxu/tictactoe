@@ -174,9 +174,44 @@ h3 {
 .fade-out {
   opacity: 0.6; }
 
+.custom-input {
+  position: relative;
+  margin: 8px 0;
+  display: inline-block; }
+  .custom-input input[type=text] {
+    background: transparent;
+    border: solid 1px #7F8C8D;
+    border-radius: 4px;
+    padding: 6px 6px 6px 6px;
+    font-size: 16px; }
+  .custom-input input[type=text]:placeholder-shown + label {
+    color: #7F8C8D;
+    font-size: 16px;
+    left: 6px;
+    top: 6px; }
+  .custom-input label,
+  .custom-input input[type=text]:focus + label {
+    color: #2f8ac7;
+    background-color: #ECF0F1;
+    padding: 0 4px;
+    font-size: 8px;
+    position: absolute;
+    left: 6px;
+    top: -6px;
+    pointer-events: none;
+    transition: top 0.2s, left 0.2s, font-size 0.2s; }
+  .custom-input input[type=text]::placeholder {
+    color: transparent;
+    display: none; }
+  .custom-input input[type=text]:focus {
+    border: solid 1px #2f8ac7;
+    outline: none; }
+  .custom-input input[type=text]:not(:focus) + label {
+    color: #7F8C8D; }
+
 .player-input-field {
   font-size: 16px;
   padding: 4px;
   margin-bottom: 4px;
-  border: 1px solid #bdc3c7;
+  border: 1px solid #7F8C8D;
   border-radius: 4px; }
