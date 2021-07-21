@@ -25,14 +25,13 @@ body {
   font-size: 0.875rem;
   letter-spacing: 1.25;
   font-weight: 500;
-  width: 140px;
   margin: 5px;
   background-color: #2f8ac7;
   color: #fff;
-  border-radius: 8px;
+  border-radius: 4px;
   padding: 0.25em 0.75em;
-  min-width: 10ch;
-  min-height: 44px;
+  width: 100px;
+  min-height: 36px;
   text-align: center;
   line-height: 1.1;
   transition: 100ms all ease-in-out; }
@@ -52,6 +51,21 @@ body {
 .button-subcell {
   text-align: center; }
 
+#demo-game {
+  background-color: #2ecc71; }
+  #demo-game:hover {
+    background-color: #55d98d; }
+  #demo-game:active {
+    background-color: #239955; }
+  #demo-game:focus {
+    outline-style: solid;
+    outline-color: transparent;
+    box-shadow: 0 0 0 3px #95e7b8; }
+  #demo-game:disabled {
+    background-color: #2ecc71;
+    opacity: 0.3;
+    cursor: none; }
+
 .cell {
   background-color: #7f8c8d;
   border: none;
@@ -67,6 +81,7 @@ body {
     box-shadow: 0 5px #333;
     transform: translateY(4px); }
   .cell:disabled {
+    background-color: #7f8c8d;
     color: rgba(16, 16, 16, 0.8);
     opacity: 0.7;
     cursor: none;
@@ -178,12 +193,13 @@ h3 {
   position: relative;
   margin: 8px 0;
   display: inline-block; }
-  .custom-input input[type=text] {
+  .custom-input input[type=text], .custom-input select {
     background: transparent;
     border: solid 1px #7F8C8D;
     border-radius: 4px;
-    padding: 6px 6px 6px 6px;
-    font-size: 16px; }
+    padding: 6px 8px 6px 8px;
+    font-size: 16px;
+    height: 34px; }
   .custom-input input[type=text]:placeholder-shown + label {
     color: #7F8C8D;
     font-size: 16px;
@@ -203,10 +219,12 @@ h3 {
   .custom-input input[type=text]::placeholder {
     color: transparent;
     display: none; }
-  .custom-input input[type=text]:focus {
+  .custom-input input[type=text]:focus,
+  .custom-input select:focus {
     border: solid 1px #2f8ac7;
     outline: none; }
-  .custom-input input[type=text]:not(:focus) + label {
+  .custom-input input[type=text]:not(:focus) + label,
+  .custom-input select:not(:focus) + label {
     color: #7F8C8D; }
 
 .player-input-field {

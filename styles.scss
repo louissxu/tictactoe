@@ -44,18 +44,17 @@ $disabledColour: rgb(189, 195, 199);
     font-size: 0.875rem;
     letter-spacing: 1.25;
     font-weight: 500;
-
-    width: 140px;
     margin: 5px;
 
     background-color: $btnColour;
     color: #fff;
-    border-radius: 8px;
+    border-radius: 4px;
     // box-shadow: 0 3px 5px rgba(0, 0, 0, 0.18);
 
     padding: 0.25em 0.75em;
-    min-width: 10ch;
-    min-height: 44px;
+    // min-width: 64dp;
+    width: 100px;
+    min-height: 36px;
 
     text-align: center;
     line-height: 1.1;
@@ -86,6 +85,31 @@ $disabledColour: rgb(189, 195, 199);
 
 .button-subcell {
     text-align: center;
+}
+
+#demo-game {
+    background-color: $secondaryColour;
+
+    &:hover {
+        background-color: scale-color($secondaryColour, $lightness: 20%);
+    }
+
+    &:active {
+        background-color: scale-color($secondaryColour, $lightness: -25%, $saturation: -0%);
+    }
+
+    &:focus {
+        outline-style: solid;
+        outline-color: transparent;
+        box-shadow: 0 0 0 3px scale-color($secondaryColour, $lightness: 50%);
+    }
+
+    &:disabled {
+        // background-color: $disabledColour;
+        background-color: $secondaryColour;
+        opacity: 0.3;
+        cursor: none;
+    }
 }
 
 $cellColour: scale-color(#7F8C8D, $lightness: 0%);
@@ -122,6 +146,7 @@ $cellDisabledColour: rgb(189, 195, 199);
 
     &:disabled {
         // background-color: $cellDisabledColour;
+        background-color: $cellColour;
         color: rgba(16, 16, 16, 0.8);
         opacity: 0.7;
         cursor: none;
@@ -301,15 +326,17 @@ h3 {
     margin: 8px 0;
     display: inline-block;
 
-    & input[type=text] {
+    & input[type=text], select {
         background: transparent;
         border: solid 1px $tertiaryColour;
         border-radius: 4px;
 
-        padding: 6px 6px 6px 6px;
+        padding: 6px 8px 6px 8px;
         // transition: padding 0.2s;
 
         font-size: 16px;
+        height: 34px;
+
     }
 
     & input[type=text]:placeholder-shown + label {
@@ -337,12 +364,14 @@ h3 {
         display: none;
     }
 
-    & input[type=text]:focus {
+    & input[type=text]:focus,
+    select:focus {
         border: solid 1px $primaryColour;
         outline: none;
     }
 
-    & input[type=text]:not(:focus) + label {
+    & input[type=text]:not(:focus) + label,
+    select:not(:focus) + label {
         color: $tertiaryColour;
     }
 

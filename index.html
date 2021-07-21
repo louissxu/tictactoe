@@ -50,6 +50,7 @@
                                 <option value="🍫">🍫</option>
                                 <option value="🧑">🧑</option>
                             </select>
+                            <label for="p1-symbol" name="p1-symbol">Symbol</label>
                         </div>
                         <br>  
                         <input type="radio" id="p1-human" name="p1-human-or-ai" value="human" checked>
@@ -67,14 +68,16 @@
                             <input type="text" id="p2-name" name="p2-name" size=10 placeholder="Name">
                             <label for="p2-name">Name</label>
                         </div>
-                        
-                        <select class="player-input-field" type="text" id="p2-symbol"><br>
-                            <!-- <option value="O">O</option> -->
-                            <option value="⭕">⭕</option>
-                            <option value="🛡️">🛡️</option>
-                            <option value="🍩">🍩</option>
-                            <option value="🤖">🤖</option>
-                        </select><br>
+                        <div class="custom-input">
+                            <select class="player-input-field" type="text" id="p2-symbol"><br>
+                                <!-- <option value="O">O</option> -->
+                                <option value="⭕">⭕</option>
+                                <option value="🛡️">🛡️</option>
+                                <option value="🍩">🍩</option>
+                                <option value="🤖">🤖</option>
+                            </select>
+                            <label for="p2-symbol" name="p2-symbol">Symbol</label>
+                        </div>
                         <input type="radio" id="p2-human" name="p2-human-or-ai" value="human" checked>
                         <label for="p2-human">Human</label><br>
                         <input type="radio" class="p2" id="p2-ai" name="p2-human-or-ai" value="ai">
@@ -84,9 +87,9 @@
                     </div>
                 </div>
                 <div class="n-container-buttons">
-                    <button class="button" id="start-game">Start Game</button><br>
-                    <button class="button" id="demo-game">Play Demo</button><br>
+                    <button class="button" id="start-game">Start Game</button>
                     <button class="button" id="reset-game">Reset Game</button>
+                    <button class="button" id="demo-game">Play Demo</button>
                 </div>
             </div>
         </div>
