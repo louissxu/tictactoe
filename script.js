@@ -870,10 +870,8 @@ const game = (() => {
 
 // Prettify  colours and css (select boxes, headings, fonts)
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
-// Restyle winning line thing (make translucent, less dominating visually)
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
 // Decide on and pick winning cell colour. Losing cell colour and disabled cell colour and when to use each of these
-// check the reflow widths. esp at ~451 where it goes to a weird stack of 1 then 2
 // clean up comments
 // add js doc strings
 // neaten up script
