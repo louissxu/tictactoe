@@ -868,7 +868,6 @@ const game = (() => {
 
 })();
 
-// Prettify  colours and css (select boxes, headings, fonts)
 // maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
 // Decide on and pick winning cell colour. Losing cell colour and disabled cell colour and when to use each of these
