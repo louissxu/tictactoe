@@ -22,10 +22,10 @@ All interactivity is written with client side javascript. It is written with the
 
 ### Factory Functions
 Factory functions are used to create the objects passed around the modules. These are used to create the Board objects, Player objects, and State objects.
-* #### Board Factory
-    Stores the current state of the game board.
 * #### Player Factory
     Stores the player information and associated settings. Name, symbol, human/ai, etc.
+* #### Board Factory
+    Stores the current state of the game board.
 * #### State Factory
     Stores The whole game state together (the board and the two players).
 
