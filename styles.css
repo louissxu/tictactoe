@@ -246,3 +246,6 @@ h3 {
   .custom-input input[type=text]:not(:focus) + label,
   .custom-input select:not(:focus) + label {
     color: #7F8C8D; }
+
+.custom-input + .custom-input {
+  margin-left: 8px; }
