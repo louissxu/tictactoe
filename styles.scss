@@ -363,7 +363,15 @@ h3 {
 
         font-size: 16px;
         height: 34px;
+        
+    }
 
+    & input[type=text] {
+        width: 132px;
+    }
+
+    & select {
+        width: 62px;
     }
 
     & input[type=text]:placeholder-shown + label {
@@ -400,6 +408,7 @@ h3 {
     & input[type=text]:not(:focus) + label,
     select:not(:focus) + label {
         color: $tertiaryColour;
+
     }
 }
 
