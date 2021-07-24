@@ -767,26 +767,12 @@ const ui = (() => {
     }
 
     const renderBoardExtended = (state, winningCells) => {
-        // TODO
-        // REFACTOR CELL COLOURING AND HOW DISABLED IS MANAGED
-
         /**
-         * Cells
+         * Renders board but additionally adds winning-cell class if it's in the winningCells list so these cells are highlighted
          * 
-         * cells disabled
-         * cells coloured (win)
-         * cells faded out (reduced opacity)
-         * 
-         * disabled state. all cells disabled but not faded out
-         * playing game. filled cells disabled but not faded out
-         * draw game. all cells disabled,  all cells faded out
-         * won game. all cells disabled, most cells faded out. some cells win colour
-         * ai turn. maybe all cells disabled?
-         * 
-         * 
-         * change this param to "winningCells"
+         * @param {State} state - board state to render
+         * @param {number[][]} winningCells - array of coordinates of the cells that should be highlighted as involved in the win
          */
-
 
         clearBoard();
         const board = state.board.getBoard();
@@ -814,9 +800,9 @@ const ui = (() => {
                     cell.classList.add("fade");
                 }
 
-                // if (board[y][x] != "") {
-                //     cell.setAttribute("disabled", "")
-                // }
+                if (board[y][x] != null) {
+                    cell.setAttribute("disabled", "")
+                }
 
                 gameBoard.appendChild(cell);
             }
@@ -1118,8 +1104,6 @@ const game = (() => {
 
 })();
 
-// maybe change board state updated to "turn finished" or "next turn" or "render turn" or some such
+// rename change board state updated to "turn finished" or "next turn" or "render turn" or some such
 // Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
-// Decide on and pick winning cell colour. Losing cell colour and disabled cell colour and when to use each of these
-// Fix disabled button stuff
 // Add link to github repo
