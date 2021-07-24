@@ -466,7 +466,7 @@ const ui = (() => {
     const p2Name = gameControls.querySelector("#p2-name");
     const p2Symbol = gameControls.querySelector("#p2-symbol");
     const p2Computer = Array.from(document.getElementsByName("p2-human-or-ai"));
-    const p2Imperfect = gameControls.querySelector("#p2-imperfect");
+    const p2Imperfect = gameControls.querySelector("#p2-imperfe ct");
 
     const p1Ai = gameControls.querySelector("#p1-ai")
     const p2Ai = gameControls.querySelector("#p2-ai")

@@ -246,10 +246,3 @@ h3 {
   .custom-input input[type=text]:not(:focus) + label,
   .custom-input select:not(:focus) + label {
     color: #7F8C8D; }
-
-.player-input-field {
-  font-size: 16px;
-  padding: 4px;
-  margin-bottom: 4px;
-  border: 1px solid #7F8C8D;
-  border-radius: 4px; }
