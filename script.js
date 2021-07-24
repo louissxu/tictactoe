@@ -1103,6 +1103,3 @@ const game = (() => {
     resetGame();
 
 })();
-
-// Add link to github repo
-// Fix tab order so it is in visual order and doesn't match flexbox order
