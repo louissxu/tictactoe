@@ -69,4 +69,4 @@ CSS is written in Sass and compiled to plain CSS using node-sass via a VS Code b
 
 UX design from a mix of sources. Some loosely based on material design components. All coded in plain css without the use of a front-end framework.
 
-Symbols can be emoji for visual variety, rather than just X and O in regular font. Debated whether to embed/hardcode an emoji font or embed svg/images directly. However, the decision was made to avoid this. Best solution likely involves webpack or twemoji or similar and was beyond the scope of this project. Accepted that in devices without native up-to-date emoji support there might be tofu for the unrecognised emoji.
+Symbols can be emoji for visual variety, rather than just X and O in regular font. Debated whether to embed/hardcode an emoji font or embed svg/images directly. However, the decision was made to avoid this. Best solution likely involves webpack or twemoji or similar and was beyond the scope of this project. Accepted that emoji presentation between devices will be non-uniform and in devices without up-to-date native emoji support there might be tofu for the unrecognised emoji.
