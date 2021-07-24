@@ -849,7 +849,6 @@ const ui = (() => {
 
     const renderGameReset = (board) => {
         disableBoard();
-        console.log("DISABLED")
         alertText.textContent = 'Press "Start Game" to begin.';
 
         playerSettingsButtons.forEach((element) => element.removeAttribute("disabled"));
@@ -899,6 +898,7 @@ const ui = (() => {
     events.on("gameDrawn", renderGameDrawn);
     events.on("gameReset", renderGameReset);
     events.on("nextPlayerUpdated", renderPlayerUpdated);
+    events.on("startAiTurn", disableBoard); // Disables board from clicks when it's an AI turn
 
     // Return Object
     return {};
@@ -1090,6 +1090,8 @@ const game = (() => {
         if (!logic.terminal(state)) {
             const nextPlayer = logic.player(state)
             if (nextPlayer.isAi() === true) {
+                events.emit("startAiTurn"); // announce start of AI turn so board gets disabled
+
                 let nextMove;
                 const chance = Math.random();
                 if (nextPlayer.isImperfect() === true && chance < 0.3) {
