@@ -183,8 +183,10 @@ button.cell.fade:disabled {
 }
 
 h1 {
-    font-weight: 400;
-    font-size: 2rem;
+    font-weight: 600;
+    font-size: 3rem;
+    font-family: "Baloo 2", sans-serif;
+    margin: 0.3em 0;
 }
 
 h3 {
@@ -192,6 +194,7 @@ h3 {
     font-weight: 500;
     font-size: 1.25rem;
     letter-spacing: 0;
+    font-family: "Baloo 2", sans-serif;
 }
 
 #n-spacer-container {
