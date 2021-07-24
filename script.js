@@ -476,11 +476,11 @@ const ui = (() => {
         [["Alice", "🔑"], ["Bob", "🔒"]],
         [["Dipper", "🧢"], ["Mabel", "🌈"]],
         [["Wallace", "🧀"], ["Gromit", "🦴"]],
-        [["Fry", "🚀"], ["Bender", "🤖"]],
+        [["Fry", "🍕"], ["Bender", "🤖"]],
         [["Tom", "🐱"], ["Jerry", "🐭"]],
         [["Finn", "🎒"], ["Jake", "🐶"]],
         [["Ralph", "🏅"], ["Vanellope", "🦄"]],
-        [["Buzz", "🧑‍🚀"], ["Woody", "🤠"]],
+        [["Buzz", "🚀"], ["Woody", "🤠"]],
         [["Sven", "🦌"], ["Olaf", "☃️"]]
         // ["Stewie", "Brian"],
         // ["Rick", "Morty"],
@@ -1105,3 +1105,4 @@ const game = (() => {
 })();
 
 // Add link to github repo
+// Fix tab order so it is in visual order and doesn't match flexbox order
