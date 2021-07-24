@@ -247,5 +247,8 @@ h3 {
   .custom-input select:not(:focus) + label {
     color: #7F8C8D; }
 
+.custom-input {
+  margin-right: 8px; }
+
 .custom-input + .custom-input {
-  margin-left: 8px; }
+  margin-right: 0px; }
