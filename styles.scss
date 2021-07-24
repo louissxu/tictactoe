@@ -144,6 +144,7 @@ body {
 
     &:focus:after {
         // Used pseudo-element so that it doesn't replace box-shadow and can do rounded corners (outline can't round corners)
+        // Ref: https://stackoverflow.com/questions/5394116/outline-radius
         content: "";
         display: block;
         position: absolute;

@@ -66,3 +66,5 @@ The controls and zones are laid out with CSS flexbox. The design is responsive w
 CSS is written in Sass and compiled to plain CSS using node-sass via a VS Code build script.
 
 UX design from a mix of sources. Some loosely based on material design components. All coded in plain css without the use of a front-end framework.
+
+Symbols are emoji for variety. Debated whether to embed/hardcode an emoji font or embed svg/images directly. However, the decision was made to avoid this. Best solution likely involves webpack or twemoji or similar and was beyond the scope of this project. Accepted that in devices without native up-to-date emoji support there might be tofu for the unrecognised emoji.

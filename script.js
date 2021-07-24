@@ -1104,6 +1104,4 @@ const game = (() => {
 
 })();
 
-// rename change board state updated to "turn finished" or "next turn" or "render turn" or some such
-// Hard code an emoji font from a cdn so that it is consistent with the images (no tofu, etc)
 // Add link to github repo
