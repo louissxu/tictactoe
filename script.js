@@ -659,9 +659,9 @@ const ui = (() => {
                 cell.setAttribute("data-y-coordinate", y);
                 cell.classList.add("cell")
 
-                // if (board[y][x] != "") {
-                //     cell.setAttribute("disabled", "")
-                // }
+                if (board[y][x] != null) {
+                    cell.setAttribute("disabled", "")
+                }
 
                 gameBoard.appendChild(cell);
             }
@@ -783,6 +783,8 @@ const ui = (() => {
          * won game. all cells disabled, most cells faded out. some cells win colour
          * ai turn. maybe all cells disabled?
          * 
+         * 
+         * change this param to "winningCells"
          */
 
 
