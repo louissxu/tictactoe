@@ -4,6 +4,8 @@ Tic-Tac-Toe written in HTML/CSS/JS.
 
 An interactive two player tic-tac-toe game with the option for one (or two) computer players.
 
+> [Live demo hosted on github pages.](https://louissxu.github.io/tictactoe)
+
 ## JavaScript
 ### Primary Modules
 All interactivity is written with client side javascript. It is written with the module pattern with three primary modules.
