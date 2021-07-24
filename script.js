@@ -169,7 +169,7 @@ const logic = (() => {
          * Return object has been expanded to include extra data to facilitate rendering of the won board state. If it's not packed into this function then the winning "position" needs to be recalculated again to get that same data (of which cells were "involved" in the win)
          * 
          * @param {State} state - board state to be evaluated 
-         * @returns {?{player: Player, pairs: number[][][], state: State, enabledCells: number[][]}}
+         * @returns {?{player: Player, pairs: number[][][], state: State, winningCells: number[][]}}
          */
 
         // Variables to store which player was winner and which coordinate pairs comprise the win position
@@ -215,9 +215,9 @@ const logic = (() => {
         }
 
         if (winningSymbol === state.p1.getSymbol()) {
-            return {player: state.p1, pairs: winningPairs, state: state, enabledCells: wonCells};
+            return {player: state.p1, pairs: winningPairs, state: state, winningCells: wonCells};
         } else if (winningSymbol === state.p2.getSymbol()) {
-            return {player: state.p2, pairs: winningPairs, state: state, enabledCells: wonCells};
+            return {player: state.p2, pairs: winningPairs, state: state, winningCells: wonCells};
         } else {
             return null
         }
@@ -766,7 +766,7 @@ const ui = (() => {
         canvas.style.display = "block";
     }
 
-    const renderBoardExtended = (state, enabledCells) => {
+    const renderBoardExtended = (state, winningCells) => {
         // TODO
         // REFACTOR CELL COLOURING AND HOW DISABLED IS MANAGED
 
@@ -808,7 +808,7 @@ const ui = (() => {
                 cell.setAttribute("data-y-coordinate", y);
                 cell.classList.add("cell")
 
-                if (membershipCheck(enabledCells, [x, y])) {
+                if (membershipCheck(winningCells, [x, y])) {
                     cell.classList.add("winning-cell");
                 } else {
                     cell.classList.add("fade");
@@ -838,7 +838,7 @@ const ui = (() => {
 
     const renderGameWon = (data) => {
         alertText.textContent = `${data.player.getName()} wins!`;
-        renderBoardExtended(data.state, data.enabledCells);
+        renderBoardExtended(data.state, data.winningCells);
         disableBoard();
         renderWinningPosition(data.pairs);
     }
