@@ -674,6 +674,14 @@ const ui = (() => {
          */
         gameBoard.querySelectorAll(".cell").forEach((cell) => cell.setAttribute("disabled", ""));
     }
+
+    const fadeBoard = () => {
+        /**
+         * Fades all cells by adding fade attribute.
+         */
+        gameBoard.querySelectorAll(".cell").forEach((cell) => cell.classList.add("fade"))
+    }
+
     const drawLine = (ctx, begin, end, stroke="black", width=1, alpha=1) => {
         /**
          * Draws line using canvas. Used to draw lines over the top of the board
@@ -761,6 +769,23 @@ const ui = (() => {
     const renderBoardExtended = (state, enabledCells) => {
         // TODO
         // REFACTOR CELL COLOURING AND HOW DISABLED IS MANAGED
+
+        /**
+         * Cells
+         * 
+         * cells disabled
+         * cells coloured (win)
+         * cells faded out (reduced opacity)
+         * 
+         * disabled state. all cells disabled but not faded out
+         * playing game. filled cells disabled but not faded out
+         * draw game. all cells disabled,  all cells faded out
+         * won game. all cells disabled, most cells faded out. some cells win colour
+         * ai turn. maybe all cells disabled?
+         * 
+         */
+
+
         clearBoard();
         const board = state.board.getBoard();
 
@@ -782,9 +807,9 @@ const ui = (() => {
                 cell.classList.add("cell")
 
                 if (membershipCheck(enabledCells, [x, y])) {
-                    cell.classList.add("active");
+                    cell.classList.add("winning-cell");
                 } else {
-                    cell.classList.add("inactive");
+                    cell.classList.add("fade");
                 }
 
                 // if (board[y][x] != "") {
@@ -818,11 +843,13 @@ const ui = (() => {
 
     const renderGameDrawn = () => {
         disableBoard();
+        fadeBoard();
         alertText.textContent = `Draw! Try again.`;
     }
 
     const renderGameReset = (board) => {
         disableBoard();
+        console.log("DISABLED")
         alertText.textContent = 'Press "Start Game" to begin.';
 
         playerSettingsButtons.forEach((element) => element.removeAttribute("disabled"));

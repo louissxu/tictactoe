@@ -114,8 +114,12 @@ body {
     border-radius: 15px;
 
     box-shadow: 0 9px #555;
+
+    outline: transparent;
+
+    position: relative; // Anchor for focus after pseudo-element
     
-    &:hover {
+    &:hover:not(:disabled) {
         background-color: scale-color($cellColour, $lightness: 20%);
     }
 
@@ -126,32 +130,55 @@ body {
     }
 
     &:focus {
+        // Focus styling is handled in :focus:after
+
         // outline-style: solid;
-        // outline-color: transparent;
+        // outline-color: scale-color($cellColour, $lightness: 50%);
+        // outline-width: 3px;
+
         // border: 3px solid scale-color($cellColour, $lightness: 50%);
+        // outline: transparent;
+
         // box-shadow: 0 0 0 3px scale-color($cellColour, $lightness: 50%);
+    }
+
+    &:focus:after {
+        // Used pseudo-element so that it doesn't replace box-shadow and can do rounded corners (outline can't round corners)
+        content: "";
+        display: block;
+        position: absolute;
+        top: -3px;
+        bottom: -3px;
+        left: -3px;
+        right: -3px;
+        border: 3px solid scale-color($cellColour, $lightness: 50%);
+        border-radius: 18px;
     }
 
     &:disabled {
         // background-color: $cellDisabledColour;
-        background-color: $cellColour;
-        color: rgba(16, 16, 16, 0.8);
-        opacity: 0.7;
-        cursor: none;
+        
+        // background-color: $cellColour;
+        // color: rgba(16, 16, 16, 0.8);
+        // opacity: 0.7;
+        cursor: default;
 
-        box-shadow: 0 9px #777
+        // box-shadow: 0 9px #777
+        color: rgba(0,0,0,1)  // disable reset to remove the fade out. Fade out gets handled by .fade class
     }
 }
 
-button.inactive {
-    // background-color: $cellDisabledColour;
-    // color: rgba(16, 16, 16, 0.3);
-    // cursor: none;
-}
-
-button.active:disabled {
+button.cell.winning-cell:disabled {
     background-color: $secondaryColour;
     color: rgb(0,0,0);
+}
+
+button.cell.fade:disabled {
+    background-color: $cellColour;
+    color: rgba(16, 16, 16, 0.8);
+    opacity: 0.7;
+    cursor: default;
+    box-shadow: 0 9px #777
 }
 
 h1 {
