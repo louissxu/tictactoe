@@ -2,21 +2,21 @@
 const events = (() => {
     /**
      * Classic pub/sub pattern module.
-     * 
+     *
      * usage:
      *  events.on("eventName", function) - subscribes to eventName, runs fuction when eventName is emitted/published.
      *  events.off("eventName", function) - unsubscribes.
      *  events.emit("eventName", ...args) - invokes all functions subscribed to "eventName". If args provided then they are passed to ongoing function.
      */
 
-    const events = {}
+    const events = {};
 
     const on = (eventName, fn) => {
         events[eventName] = events[eventName] || [];
-        if (!events[eventName].includes(fn)){
+        if (!events[eventName].includes(fn)) {
             events[eventName].push(fn);
         }
-    }
+    };
 
     const off = (eventName, fn) => {
         if (events[eventName]) {
@@ -27,7 +27,7 @@ const events = (() => {
                 }
             }
         }
-    }
+    };
 
     const emit = (eventName, ...dataArgs) => {
         if (events[eventName]) {
@@ -35,13 +35,10 @@ const events = (() => {
                 fn(...dataArgs);
             });
         }
-    }
+    };
 
-    return {on,
-            off,
-            emit,}
+    return { on, off, emit };
 })();
-
 
 // Logic Module
 const logic = (() => {
@@ -55,38 +52,41 @@ const logic = (() => {
         /**
          * Deep copies an array
          */
-        return items.map(item => Array.isArray(item) ? clone(item) : item);
-    }
+        return items.map((item) => (Array.isArray(item) ? clone(item) : item));
+    };
 
     // Tic-Tac-Toe Logic
     const player = (state) => {
         /**
          * Takes state input and returns who the next player is
-         * @param {State} state - state object containing the current game state 
+         * @param {State} state - state object containing the current game state
          * @returns {Player} returns player object corresponding to the next player
          */
 
-        turnDiff = state.board.getBoard().flat().reduce((acc, cur) => {
-            if (cur === state.p1.getSymbol()) {
-                return acc + 1;
-            } else if (cur === state.p2.getSymbol()) {
-                return acc - 1;
-            } else {
-                return acc;
-            }
-        }, 0);
+        turnDiff = state.board
+            .getBoard()
+            .flat()
+            .reduce((acc, cur) => {
+                if (cur === state.p1.getSymbol()) {
+                    return acc + 1;
+                } else if (cur === state.p2.getSymbol()) {
+                    return acc - 1;
+                } else {
+                    return acc;
+                }
+            }, 0);
 
         if (turnDiff <= 0) {
             return state.p1;
         } else {
             return state.p2;
         }
-    }
+    };
 
     const actions = (state) => {
         /**
          * Takes state input and returns list of coordinates of possible next moves
-         * @param {State} state - state object of current game state 
+         * @param {State} state - state object of current game state
          * @returns {number[][]} list of possible moves that could be made at this time [[x1, y1], [x2, y2], ...]
          */
         const allActions = [];
@@ -95,19 +95,19 @@ const logic = (() => {
             for (let x = 0; x < state.board.getBoard()[y].length; x++) {
                 const cell = state.board.getBoard()[y][x];
                 if (!cell) {
-                    allActions.push([x, y])
-                }                
+                    allActions.push([x, y]);
+                }
             }
         }
 
         return allActions;
-    }
+    };
 
     const result = (state, action) => {
         /**
          * Takes board state and an action and returns the changed board state if an action is taken at action coordinates
          * @param {State} state - starting board state
-         * @param {number[]} action - coordinate of location for action to be taken [x, y] 
+         * @param {number[]} action - coordinate of location for action to be taken [x, y]
          * @returns {State} new State object corresponding with new board state
          */
 
@@ -115,10 +115,10 @@ const logic = (() => {
         const y = action[1];
 
         const newBoard = Board(state.board.getBoard());
-        newBoard.setCell(action, player(state).getSymbol())
+        newBoard.setCell(action, player(state).getSymbol());
 
         return State(newBoard, state.p1, state.p2);
-    }
+    };
 
     const winningCells = (pairs) => {
         /**
@@ -127,48 +127,45 @@ const logic = (() => {
          * @returns {number[][]} winningCells - list of coordinates of cells (if any) that make up the winning line(s). ie [[ax, ay], [bx, by], [cx, cy],...]
          */
 
-
         // Couldn't use Set becuase coordinates are stored as a coordinate object so two identical coordinates dont "match"
         // (as they are different objects even when they have the same value)
-        const cellsList = []
+        const cellsList = [];
 
-        for (let i=0; i<pairs.length; i++){
+        for (let i = 0; i < pairs.length; i++) {
             const start = pairs[i][0];
             const end = pairs[i][1];
-            const middle = [(start[0]+end[0])/2, (start[1]+end[1])/2]
+            const middle = [(start[0] + end[0]) / 2, (start[1] + end[1]) / 2];
 
-            cellsList.push(start)
-            cellsList.push(middle)
-            cellsList.push(end)
+            cellsList.push(start);
+            cellsList.push(middle);
+            cellsList.push(end);
         }
 
         const equivalent = (a, b) => {
-            if (a[0] === b[0] && a[1] === b[1]){
-                return true
+            if (a[0] === b[0] && a[1] === b[1]) {
+                return true;
             }
-            return false
-        }
+            return false;
+        };
 
         const uniqueCoordinates = cellsList.reduce((prev, curr) => {
-            for (let i=0; i<prev.length; i++) {
+            for (let i = 0; i < prev.length; i++) {
                 if (equivalent(prev[i], curr)) {
-                    return prev
+                    return prev;
                 }
             }
-            return [...prev, curr]
-
-        }, [])
+            return [...prev, curr];
+        }, []);
 
         return uniqueCoordinates;
-
-    }
+    };
 
     const winner = (state) => {
         /**
          * Takes state object and figures out if there is a winning player. If there is a winner returns the winning player. Otherwise returns null
          * Return object has been expanded to include extra data to facilitate rendering of the won board state. If it's not packed into this function then the winning "position" needs to be recalculated again to get that same data (of which cells were "involved" in the win)
-         * 
-         * @param {State} state - board state to be evaluated 
+         *
+         * @param {State} state - board state to be evaluated
          * @returns {?{player: Player, pairs: number[][][], state: State, winningCells: number[][]}}
          */
 
@@ -180,74 +177,104 @@ const logic = (() => {
 
         // Check for possible win states
         // Check horizontals
-        for (let y=0; y<board.length; y++) {
+        for (let y = 0; y < board.length; y++) {
             const val = board[y][0];
-            if (board[y].every((cell) => cell === val) && val != null){
+            if (board[y].every((cell) => cell === val) && val != null) {
                 winningSymbol = val;
-                winningPairs.push([[0,y],[2,y]]);
+                winningPairs.push([
+                    [0, y],
+                    [2, y],
+                ]);
             }
         }
 
         // Check verticals
-        for (let x=0; x<board[0].length; x++) {
+        for (let x = 0; x < board[0].length; x++) {
             const val = board[0][x];
-            const column = board.map((row) => row[x])
+            const column = board.map((row) => row[x]);
             if (column.every((cell) => cell === val) && val != null) {
                 winningSymbol = val;
-                winningPairs.push([[x,0],[x,2]]);
+                winningPairs.push([
+                    [x, 0],
+                    [x, 2],
+                ]);
             }
         }
 
         // Check diagonals
-        if (board[0][0] === board[1][1] && board [0][0] === board[2][2] && board[0][0] != null) {
+        if (
+            board[0][0] === board[1][1] &&
+            board[0][0] === board[2][2] &&
+            board[0][0] != null
+        ) {
             winningSymbol = board[0][0];
-            winningPairs.push([[0,0], [2,2]]);
+            winningPairs.push([
+                [0, 0],
+                [2, 2],
+            ]);
         }
-        if (board[0][2] === board[1][1] && board[0][2] === board[2][0] && board [0][2] != null) {
+        if (
+            board[0][2] === board[1][1] &&
+            board[0][2] === board[2][0] &&
+            board[0][2] != null
+        ) {
             winningSymbol = board[0][2];
-            winningPairs.push([[0,2], [2,0]]);
+            winningPairs.push([
+                [0, 2],
+                [2, 0],
+            ]);
         }
 
         // If board won, calculates which cells were "involved" in the win (to highlight in UI later)
-        let wonCells
+        let wonCells;
         if (winningSymbol) {
             wonCells = winningCells(winningPairs);
         }
 
         if (winningSymbol === state.p1.getSymbol()) {
-            return {player: state.p1, pairs: winningPairs, state: state, winningCells: wonCells};
+            return {
+                player: state.p1,
+                pairs: winningPairs,
+                state: state,
+                winningCells: wonCells,
+            };
         } else if (winningSymbol === state.p2.getSymbol()) {
-            return {player: state.p2, pairs: winningPairs, state: state, winningCells: wonCells};
+            return {
+                player: state.p2,
+                pairs: winningPairs,
+                state: state,
+                winningCells: wonCells,
+            };
         } else {
-            return null
+            return null;
         }
-    }
+    };
 
     const terminal = (state) => {
         /**
          * Takes board state and returns whether the board is terminal (game has ended). Board is terminal if either game has been won by someone. Or if there are no more valid moves
-         * @param {State} state - current board state 
+         * @param {State} state - current board state
          * @returns {boolean} true if the board is terminal. false if not terminal
          */
         if (winner(state)) {
-            return true
+            return true;
         } else if (actions(state).length <= 0) {
-            return true
+            return true;
         } else {
             return false;
         }
-    }
+    };
 
     const randomAction = (state) => {
         /**
          * Takes board state and returns a random action. Used for imperfect AI.
-         * 
+         *
          * @param {State} state - board state
          * @returns {number[]} coordinate for action to be taken by state
          */
-        const availableActions = shuffled(actions(state))
+        const availableActions = shuffled(actions(state));
         return availableActions[0];
-    }
+    };
 
     // AI Functions
     const utility = (state) => {
@@ -255,8 +282,8 @@ const logic = (() => {
          * @param {State} state - current board state
          * @returns {number} utility of the current board - 1 if p1 win, -1 if p2 win, 0 if draw
          */
-        const data = winner(state) ?? ""
-        const winningPlayer = data.player ?? ""
+        const data = winner(state) ?? "";
+        const winningPlayer = data.player ?? "";
         if (winningPlayer === state.p1) {
             return 1;
         } else if (winningPlayer === state.p2) {
@@ -264,26 +291,26 @@ const logic = (() => {
         } else {
             return 0;
         }
-    }
+    };
 
     const shuffled = (array) => {
         /**
          * Shuffles an array
          * Uses Fisher-Yates shuffle. However not in-place since functional paradigm so return is a copy
          * Ref: https://bost.ocks.org/mike/shuffle/compare.html
-         * 
+         *
          * @param {Array} array - input array
          * @returns {Array} new shuffled array
          */
         const newArray = [...array];
-        for (let i = newArray.length-1; i >= 0; i--){
-            let j = Math.floor(Math.random() * (i+1))
+        for (let i = newArray.length - 1; i >= 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
             let temp = newArray[j];
             newArray[j] = newArray[i];
             newArray[i] = temp;
         }
-        return newArray
-    }
+        return newArray;
+    };
 
     const hash = (state) => {
         /**
@@ -291,17 +318,26 @@ const logic = (() => {
          * @param {State} state - board state to hash
          * @returns {string} hash recorded as a string representation of the board state. Used for cache index.
          */
-        const hash = state.board.getBoard()
+        const hash = state.board
+            .getBoard()
             .flat()
-            .map(cell => cell ?? "_") 
-            .join("")
-        return hash
-    }
+            .map((cell) => cell ?? "_")
+            .join("");
+        return hash;
+    };
 
-    const alphabeta = (state, depth, alpha, beta, maximizingPlayer, counter, memo) => {
+    const alphabeta = (
+        state,
+        depth,
+        alpha,
+        beta,
+        maximizingPlayer,
+        counter,
+        memo
+    ) => {
         /**
          * Alpha beta function. Used to recursively calculate optimal move. Uses minimax algorithm, with alpha beta and memoisation as optimisations. For interest, tracks the number of calls to this function with counter log.
-         * 
+         *
          * @param {State} state - state of the board
          * @param {number} depth - depth limit to alpha beta search. In practice not used here as enough depth provided to allow full tree search
          * @param {number} alpha - stores alpha cut-off
@@ -311,7 +347,7 @@ const logic = (() => {
          * @param {Object} memo - Object used as a dictionary to store {hash(State): [utility, times value read]} cache
          * @returns {{value: number, precise: boolean}} returns object containing utility of the game state (value) and whether that was reached precisely (precise)
          */
-        counter[0] += 1 // Logging number of calls to alphabeta
+        counter[0] += 1; // Logging number of calls to alphabeta
 
         if (depth === 0) {
             return {
@@ -327,19 +363,27 @@ const logic = (() => {
         }
 
         if (hash(state) in memo) {
-            memo[hash(state)][1] += 1;  // Increments usage to record how frequently the memo is used to skip exploring a subtree. Was used for efficiency debugging.
+            memo[hash(state)][1] += 1; // Increments usage to record how frequently the memo is used to skip exploring a subtree. Was used for efficiency debugging.
             return {
                 value: memo[hash(state)][0],
                 precise: true,
-            }
+            };
         }
 
         if (maximizingPlayer === true) {
             let value = -Infinity;
-            const availableActions = shuffled(actions(state))
+            const availableActions = shuffled(actions(state));
             let precise = true;
             for (let i = 0; i < availableActions.length; i++) {
-                const {value: newValue, precise: newPrecise} = alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, false, counter, memo);
+                const { value: newValue, precise: newPrecise } = alphabeta(
+                    result(state, availableActions[i]),
+                    depth - 1,
+                    alpha,
+                    beta,
+                    false,
+                    counter,
+                    memo
+                );
                 if (newPrecise == false) {
                     precise = false;
                 }
@@ -359,10 +403,18 @@ const logic = (() => {
             };
         } else {
             let value = Infinity;
-            const availableActions = shuffled(actions(state))
+            const availableActions = shuffled(actions(state));
             let precise = true;
             for (let i = 0; i < availableActions.length; i++) {
-                const {value: newValue, precise: newPrecise} = alphabeta(result(state, availableActions[i]), depth -1, alpha, beta, true, counter, memo);
+                const { value: newValue, precise: newPrecise } = alphabeta(
+                    result(state, availableActions[i]),
+                    depth - 1,
+                    alpha,
+                    beta,
+                    true,
+                    counter,
+                    memo
+                );
                 if (newPrecise == false) {
                     precise = false;
                 }
@@ -381,44 +433,63 @@ const logic = (() => {
                 precise,
             };
         }
-    }
+    };
 
     const minimax = (state) => {
         /**
          * Entry function to figure out the best move from a given state. Optimises utility based on whether the player is the maximising or minimising player
-         * 
+         *
          * @param {State} state - current state of board to calculate the optimal move
          * @returns {number[]} - coordinates [x, y] of best move that maximises(/or minimises - as appropriate) the player's utility
          */
-        const availableActions = shuffled(actions(state))
-        
-        let bestAction = null
-        let counter = [0]
-        let memo = {}
+        const availableActions = shuffled(actions(state));
+
+        let bestAction = null;
+        let counter = [0];
+        let memo = {};
         if (logic.player(state) === state.p1) {
             let value = -Infinity;
             for (let i = 0; i < availableActions.length; i++) {
-                const {value: newValue, precise: precise} = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, false, counter, memo);
+                const { value: newValue, precise: precise } = alphabeta(
+                    result(state, availableActions[i]),
+                    10,
+                    -Infinity,
+                    Infinity,
+                    false,
+                    counter,
+                    memo
+                );
                 if (newValue > value) {
                     value = newValue;
-                    bestAction = availableActions[i]
+                    bestAction = availableActions[i];
                 }
             }
         } else {
             let value = Infinity;
             for (let i = 0; i < availableActions.length; i++) {
-                const {value: newValue, precise: precise} = alphabeta(result(state, availableActions[i]), 10, -Infinity, Infinity, true, counter, memo);
+                const { value: newValue, precise: precise } = alphabeta(
+                    result(state, availableActions[i]),
+                    10,
+                    -Infinity,
+                    Infinity,
+                    true,
+                    counter,
+                    memo
+                );
                 if (newValue < value) {
                     value = newValue;
-                    bestAction = availableActions[i]
+                    bestAction = availableActions[i];
                 }
             }
         }
 
-        console.log(`Minimax iterations: ${counter[0]} | Memo size: ${Object.keys(memo).length}`)
+        console.log(
+            `Minimax iterations: ${counter[0]} | Memo size: ${
+                Object.keys(memo).length
+            }`
+        );
         return bestAction;
-
-    }
+    };
 
     return {
         clone,
@@ -430,15 +501,14 @@ const logic = (() => {
         minimax,
         hash,
         randomAction,
-    }
+    };
 })();
-
 
 // UI Module
 const ui = (() => {
     /**
      * UI module
-     * 
+     *
      * Handles the interactions with the game's HTML
      * Catches the UI input buttons and fires off events with the data
      * Receives events when the game state changes or board changes and renders the board/UI as required
@@ -450,13 +520,17 @@ const ui = (() => {
     const alertText = document.querySelector("#alert-text");
 
     const startGameButton = gameControls.querySelector("#start-game");
-    const playerSettingsButtons = gameControls.querySelectorAll("input, select, input[type='radio']+label")
+    const playerSettingsButtons = gameControls.querySelectorAll(
+        "input, select, input[type='radio']+label"
+    );
     const resetGameButton = gameControls.querySelector("#reset-game");
 
     const canvas = document.querySelector("#canvas");
 
     const gameContainer = document.querySelector("#n-container-game");
-    const playerControlsContainers = Array.from(document.getElementsByClassName("n-container-players"));
+    const playerControlsContainers = Array.from(
+        document.getElementsByClassName("n-container-players")
+    );
 
     // Cache game Controls DOM
     const p1Name = gameControls.querySelector("#p1-name");
@@ -468,20 +542,47 @@ const ui = (() => {
     const p2Computer = Array.from(document.getElementsByName("p2-human-or-ai"));
     const p2Imperfect = gameControls.querySelector("#p2-imperfect");
 
-    const p1Ai = gameControls.querySelector("#p1-ai")
-    const p2Ai = gameControls.querySelector("#p2-ai")
+    const p1Ai = gameControls.querySelector("#p1-ai");
+    const p2Ai = gameControls.querySelector("#p2-ai");
 
     // Data of random names and symbols used when "demo" button is pressed
     const names = [
-        [["Alice", "🔑"], ["Bob", "🔒"]],
-        [["Dipper", "🧢"], ["Mabel", "🌈"]],
-        [["Wallace", "🧀"], ["Gromit", "🦴"]],
-        [["Fry", "🍕"], ["Bender", "🤖"]],
-        [["Tom", "🐱"], ["Jerry", "🐭"]],
-        [["Finn", "🎒"], ["Jake", "🐶"]],
-        [["Ralph", "🏅"], ["Vanellope", "🦄"]],
-        [["Buzz", "🚀"], ["Woody", "🤠"]],
-        [["Sven", "🦌"], ["Olaf", "☃️"]]
+        [
+            ["Alice", "🔑"],
+            ["Bob", "🔒"],
+        ],
+        [
+            ["Dipper", "🧢"],
+            ["Mabel", "🌈"],
+        ],
+        [
+            ["Wallace", "🧀"],
+            ["Gromit", "🦴"],
+        ],
+        [
+            ["Fry", "🍕"],
+            ["Bender", "🤖"],
+        ],
+        [
+            ["Tom", "🐱"],
+            ["Jerry", "🐭"],
+        ],
+        [
+            ["Finn", "🎒"],
+            ["Jake", "🐶"],
+        ],
+        [
+            ["Ralph", "🏅"],
+            ["Vanellope", "🦄"],
+        ],
+        [
+            ["Buzz", "🚀"],
+            ["Woody", "🤠"],
+        ],
+        [
+            ["Sven", "🦌"],
+            ["Olaf", "☃️"],
+        ],
         // ["Stewie", "Brian"],
         // ["Rick", "Morty"],
         // ["Bart", "Lisa"],
@@ -496,10 +597,10 @@ const ui = (() => {
         // ["Marlin", "Dory"],
         // ["Calvin", "Hobbes"],
         // ["Bluey", "Bingo"],
-    ]
+    ];
 
     // Add symbols from above data to select boxes in UI
-    for (i=0; i<names.length; i++){
+    for (i = 0; i < names.length; i++) {
         const opt1 = document.createElement("option");
         opt1.value = names[i][0][1];
         opt1.innerHTML = names[i][0][1];
@@ -531,8 +632,8 @@ const ui = (() => {
         p2ImperfectVal = Boolean(p2Imperfect.checked) || false;
 
         // Ref: https://stackoverflow.com/a/41037200
-        p1ComputerVal = p1Computer.find(r => r.checked).value || "human"
-        p2ComputerVal = p2Computer.find(r => r.checked).value || "human"
+        p1ComputerVal = p1Computer.find((r) => r.checked).value || "human";
+        p2ComputerVal = p2Computer.find((r) => r.checked).value || "human";
 
         events.emit("clickedStart", {
             p1Name: p1NameVal,
@@ -544,7 +645,7 @@ const ui = (() => {
             p2Computer: p2ComputerVal,
             p2Imperfect: p2ImperfectVal,
         });
-    }
+    };
 
     const clickedDemo = (e) => {
         /**
@@ -552,15 +653,18 @@ const ui = (() => {
          * Picks random values. Inserts the values into the UI fields then starts the game.
          */
 
-        events.emit("clickedReset", "")
+        events.emit("clickedReset", "");
 
         // Picks new random set of names from dummy names list
         // To avoid repeats, loops until it picks one that doesn't match the current one
         let choice;
         do {
-            choice = names[Math.floor(Math.random()*(names.length))]
-        } while (p1Name.value === choice[0][0] && p2Name.value === choice[1][0]);
-        
+            choice = names[Math.floor(Math.random() * names.length)];
+        } while (
+            p1Name.value === choice[0][0] &&
+            p2Name.value === choice[1][0]
+        );
+
         // Fill in values into the controls fields
         p1Name.value = choice[0][0];
         p1Symbol.value = choice[0][1];
@@ -574,14 +678,14 @@ const ui = (() => {
 
         // Starts game
         clickedStart("");
-    }
+    };
 
     const clickedReset = (e) => {
         /**
          * Fires when the reset button is clicked.
          */
         events.emit("clickedReset", "");
-    }
+    };
 
     const clickedHuman = (e) => {
         /**
@@ -594,14 +698,14 @@ const ui = (() => {
         const playerId = e.target.id.slice(0, 2);
 
         if (playerId === "p1") {
-            p1ImperfectField.checked = false
+            p1ImperfectField.checked = false;
         } else if (playerId === "p2") {
-            p2ImperfectField.checked = false
+            p2ImperfectField.checked = false;
         }
-    }
+    };
 
     const clickedImperfectAi = (e) => {
-        /** 
+        /**
          * Automates part of UI.
          * When "imperfect AI" is clicked. Changes human/ai selector to AI.
          */
@@ -612,12 +716,12 @@ const ui = (() => {
 
         if (e.target.checked === true) {
             if (playerId === "p1") {
-                p1AiField.checked = true
+                p1AiField.checked = true;
             } else if (playerId === "p2") {
-                p2AiField.checked = true
+                p2AiField.checked = true;
             }
         }
-    }
+    };
 
     const clickedCell = (e) => {
         /**
@@ -626,9 +730,9 @@ const ui = (() => {
          */
         events.emit("humanClickedCell", [
             e.target.getAttribute("data-x-coordinate"),
-            e.target.getAttribute("data-y-coordinate")
+            e.target.getAttribute("data-y-coordinate"),
         ]);
-    }
+    };
 
     // Board Rendering Functions
     const clearBoard = () => {
@@ -638,12 +742,12 @@ const ui = (() => {
         while (gameBoard.firstChild) {
             gameBoard.removeChild(gameBoard.lastChild);
         }
-    }
+    };
 
     const renderBoard = (state) => {
         /**
          * @param {State} state - A state object containing the state of the board to be rendered.
-         * 
+         *
          * Adds 3x3 grid of cells to the gameBoard location. Each cell contains:
          *  - cell symbol if filled
          *  - x,y coordinate as data values
@@ -652,37 +756,48 @@ const ui = (() => {
         const board = state.board.getBoard();
 
         for (let y = 0; y < board.length; y++) {
-            for (let x=0; x < board[y].length; x++) {
+            for (let x = 0; x < board[y].length; x++) {
                 const cell = document.createElement("button");
                 cell.textContent = board[y][x];
                 cell.setAttribute("data-x-coordinate", x);
                 cell.setAttribute("data-y-coordinate", y);
-                cell.classList.add("cell")
+                cell.classList.add("cell");
 
                 if (board[y][x] != null) {
-                    cell.setAttribute("disabled", "")
+                    cell.setAttribute("disabled", "");
                 }
 
                 gameBoard.appendChild(cell);
             }
         }
-    }
+    };
 
     const disableBoard = () => {
         /**
          * Disables all cells in board by adding disabled attribute.
          */
-        gameBoard.querySelectorAll(".cell").forEach((cell) => cell.setAttribute("disabled", ""));
-    }
+        gameBoard
+            .querySelectorAll(".cell")
+            .forEach((cell) => cell.setAttribute("disabled", ""));
+    };
 
     const fadeBoard = () => {
         /**
          * Fades all cells by adding fade attribute.
          */
-        gameBoard.querySelectorAll(".cell").forEach((cell) => cell.classList.add("fade"))
-    }
+        gameBoard
+            .querySelectorAll(".cell")
+            .forEach((cell) => cell.classList.add("fade"));
+    };
 
-    const drawLine = (ctx, begin, end, stroke="black", width=1, alpha=1) => {
+    const drawLine = (
+        ctx,
+        begin,
+        end,
+        stroke = "black",
+        width = 1,
+        alpha = 1
+    ) => {
         /**
          * Draws line using canvas. Used to draw lines over the top of the board
          * Ref: https://www.javascripttutorial.net/web-apis/javascript-draw-line/
@@ -704,7 +819,7 @@ const ui = (() => {
         ctx.moveTo(...begin);
         ctx.lineTo(...end);
         ctx.stroke();
-    }
+    };
 
     const clearCanvas = () => {
         /**
@@ -712,14 +827,14 @@ const ui = (() => {
          */
         const context = canvas.getContext("2d");
         context.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    };
 
     const renderWinningPosition = (pairs) => {
         /**
          * Draws a line over the winning position(s)
-         * 
+         *
          * @param {number[][][]} pairs - A list of pairs of cell coordinates that make up a won line. ie [[[ix1, iy1], [ix2, iy2]], [[jx1, jy1], [jx2, jy2]]]
-         * 
+         *
          * Draws a line from i1 to i2 (and if there is a simultaneous win condition, j1 to j2)
          */
 
@@ -735,11 +850,17 @@ const ui = (() => {
         // 0 <= y <= 2
 
         // Scales up to display grid size
-        const scaledPairs = pairs.map(([[ax, ay], [bx, by]]) => [[ax*101, ay*110], [bx*101, by*110]]);
-        
+        const scaledPairs = pairs.map(([[ax, ay], [bx, by]]) => [
+            [ax * 101, ay * 110],
+            [bx * 101, by * 110],
+        ]);
+
         // Moves origin so (0,0) is centred on top left cell
-        const shiftedPairs = scaledPairs.map(([[ax, ay], [bx, by]]) => [[ax+49, ay+49], [bx+49, by+49]]);
-        
+        const shiftedPairs = scaledPairs.map(([[ax, ay], [bx, by]]) => [
+            [ax + 49, ay + 49],
+            [bx + 49, by + 49],
+        ]);
+
         // Vector scales to "extend" the line past the centre of the squares (so they "stick out" past the middle points)
         const vectorScaledPairs = shiftedPairs.map(([[ax, ay], [bx, by]]) => {
             // Vector from a -> b
@@ -747,29 +868,39 @@ const ui = (() => {
             const vy = -ay + by;
 
             // Length of V (ie. |a->b|)
-            const vLength = Math.sqrt(vx**2 + vy**2);
+            const vLength = Math.sqrt(vx ** 2 + vy ** 2);
 
             // Unit vector from a -> b of 1 pixel length (ie. v / |v|)
             const ux = vx / vLength;
             const uy = vy / vLength;
-            
+
             // Return pairs projected out an extra 20 pixels length in the unit vector direction
             // ie a = a-20*u and b=b+20*u
-            return [[ax-20*ux, ay-20*uy], [bx+20*ux, by+20*uy]]
-        })
+            return [
+                [ax - 20 * ux, ay - 20 * uy],
+                [bx + 20 * ux, by + 20 * uy],
+            ];
+        });
 
         // Draw line for each winning position
         const context = canvas.getContext("2d");
         vectorScaledPairs.forEach(([start, end]) => {
-            drawLine(context, start, end, stroke="black", width=5, alpha=0.7);
-        })
+            drawLine(
+                context,
+                start,
+                end,
+                (stroke = "black"),
+                (width = 5),
+                (alpha = 0.7)
+            );
+        });
         canvas.style.display = "block";
-    }
+    };
 
     const renderBoardExtended = (state, winningCells) => {
         /**
          * Renders board but additionally adds winning-cell class if it's in the winningCells list so these cells are highlighted
-         * 
+         *
          * @param {State} state - board state to render
          * @param {number[][]} winningCells - array of coordinates of the cells that should be highlighted as involved in the win
          */
@@ -778,21 +909,21 @@ const ui = (() => {
         const board = state.board.getBoard();
 
         const membershipCheck = (members, elem) => {
-            for (let i=0; i<members.length; i++) {
-                if (elem[0] === members[i][0] && elem[1] === members[i][1]){
-                    return true
+            for (let i = 0; i < members.length; i++) {
+                if (elem[0] === members[i][0] && elem[1] === members[i][1]) {
+                    return true;
                 }
             }
-            return false
-        }
+            return false;
+        };
 
         for (let y = 0; y < board.length; y++) {
-            for (let x=0; x < board[y].length; x++) {
+            for (let x = 0; x < board[y].length; x++) {
                 const cell = document.createElement("button");
                 cell.textContent = board[y][x];
                 cell.setAttribute("data-x-coordinate", x);
                 cell.setAttribute("data-y-coordinate", y);
-                cell.classList.add("cell")
+                cell.classList.add("cell");
 
                 if (membershipCheck(winningCells, [x, y])) {
                     cell.classList.add("winning-cell");
@@ -801,45 +932,49 @@ const ui = (() => {
                 }
 
                 if (board[y][x] != null) {
-                    cell.setAttribute("disabled", "")
+                    cell.setAttribute("disabled", "");
                 }
 
                 gameBoard.appendChild(cell);
             }
         }
-    }
+    };
 
     // UI Render Functions
     // Gets invoked when game state changes.
     // Adjusts and renders game UI elements for when state changes. eg alert box, field opacity, locking fields.
     const renderGameStart = () => {
-        alertText.textContent = ""
-        playerSettingsButtons.forEach((element) => element.setAttribute("disabled", ""));
+        alertText.textContent = "";
+        playerSettingsButtons.forEach((element) =>
+            element.setAttribute("disabled", "")
+        );
         startGameButton.setAttribute("disabled", "");
         resetGameButton.removeAttribute("disabled");
 
         gameContainer.classList.remove("fade-out");
         playerControlsContainers.forEach((el) => el.classList.add("fade-out"));
-    }
+    };
 
     const renderGameWon = (data) => {
         alertText.textContent = `${data.player.getName()} wins!`;
         renderBoardExtended(data.state, data.winningCells);
         disableBoard();
         renderWinningPosition(data.pairs);
-    }
+    };
 
     const renderGameDrawn = () => {
         disableBoard();
         fadeBoard();
         alertText.textContent = `Draw! Try again.`;
-    }
+    };
 
     const renderGameReset = (board) => {
         disableBoard();
         alertText.textContent = 'Press "Start Game" to begin.';
 
-        playerSettingsButtons.forEach((element) => element.removeAttribute("disabled"));
+        playerSettingsButtons.forEach((element) =>
+            element.removeAttribute("disabled")
+        );
         startGameButton.removeAttribute("disabled");
         resetGameButton.setAttribute("disabled", "");
 
@@ -847,25 +982,33 @@ const ui = (() => {
         canvas.style.display = "none";
 
         gameContainer.classList.add("fade-out");
-        playerControlsContainers.forEach((el) => el.classList.remove("fade-out"));
-    }
+        playerControlsContainers.forEach((el) =>
+            el.classList.remove("fade-out")
+        );
+    };
 
     const renderPlayerUpdated = (player) => {
-        alertText.textContent = `${player.getName()}'s turn. Place your ${player.getSymbol()}.`
-    }
-    
+        alertText.textContent = `${player.getName()}'s turn. Place your ${player.getSymbol()}.`;
+    };
+
     // Bind Events
-    gameControls.querySelector("#start-game").addEventListener("click", clickedStart);
+    gameControls
+        .querySelector("#start-game")
+        .addEventListener("click", clickedStart);
 
-    gameControls.querySelector("#demo-game").addEventListener("click", clickedDemo);
+    gameControls
+        .querySelector("#demo-game")
+        .addEventListener("click", clickedDemo);
 
-    gameControls.querySelector("#reset-game").addEventListener("click", clickedReset);
+    gameControls
+        .querySelector("#reset-game")
+        .addEventListener("click", clickedReset);
 
     gameControls.addEventListener("change", (e) => {
-        if (e.target.type === "radio" && e.target.value === "human"){
+        if (e.target.type === "radio" && e.target.value === "human") {
             clickedHuman(e);
         }
-    })
+    });
 
     gameControls.addEventListener("change", (e) => {
         if (e.target.classList.contains("imperfect-checkbox")) {
@@ -892,12 +1035,16 @@ const ui = (() => {
     return {};
 })();
 
-
-const Player = (playerName = null, symbol = null, ai = null, imperfect = null) => {
+const Player = (
+    playerName = null,
+    symbol = null,
+    ai = null,
+    imperfect = null
+) => {
     /**
      * Player factory
      * Creates player object that stores player attributes and details.
-     * 
+     *
      * @typedef {Object} Player
      * @property {?string} playerName - string containing the players name for display purposes
      * @property {?string} symbol - unicode symbol used to fill players locations in displayed game board
@@ -911,7 +1058,7 @@ const Player = (playerName = null, symbol = null, ai = null, imperfect = null) =
 
     const getSymbol = () => symbol;
     const getName = () => playerName;
-    const isAi = () => ai === "ai" ? true : false;
+    const isAi = () => (ai === "ai" ? true : false);
     const isImperfect = () => imperfect;
 
     return {
@@ -919,40 +1066,40 @@ const Player = (playerName = null, symbol = null, ai = null, imperfect = null) =
         getName,
         isAi,
         isImperfect,
-    }
-}
-
+    };
+};
 
 const Board = (board = null) => {
     /**
      * Board factory
      * Creates board object that stores positions on the board in a 2d array.
-     * 
+     *
      * @typedef {Object} Board
      * @property {?string[][]} board - 2d array of strings which stores the state of the board. Null if empty, player's symbol if filled
      */
     if (board) {
-        board = logic.clone(board)
+        board = logic.clone(board);
     } else {
-        board = [[null, null, null],
-                [null, null, null],
-                [null, null, null]]
+        board = [
+            [null, null, null],
+            [null, null, null],
+            [null, null, null],
+        ];
     }
-    
+
     const getBoard = () => board;
 
     const setCell = (coord, val) => {
         const x = coord[0];
         const y = coord[1];
         board[y][x] = val;
-    }
+    };
 
     return {
         getBoard,
         setCell,
-    }
-}
-
+    };
+};
 
 const State = (board, p1, p2) => {
     /**
@@ -968,9 +1115,8 @@ const State = (board, p1, p2) => {
         board,
         p1,
         p2,
-    }
-}
-
+    };
+};
 
 // Game Module
 const game = (() => {
@@ -984,9 +1130,11 @@ const game = (() => {
     let state = State();
 
     // Dummy variable so that a empty board can be created more easily
-    const emptyBoard = [[null, null, null],
-                        [null, null, null],
-                        [null, null, null]];
+    const emptyBoard = [
+        [null, null, null],
+        [null, null, null],
+        [null, null, null],
+    ];
 
     // Variable to store timeout timer between turns so it can be cancelled by other functions if game is stopped/reset while AI turn is waiting.
     let queuedNextTurn;
@@ -994,30 +1142,39 @@ const game = (() => {
     const startGame = (data) => {
         /**
          * Function to start a game. Receives data from the UI, stores the state and emits events to get the game running
-         * 
+         *
          * @param {Object} data - data received from UI as a dictionary
          */
         const board = Board(emptyBoard);
-        const p1 = Player(data.p1Name, data.p1Symbol, data.p1Computer, data.p1Imperfect);
-        const p2 = Player(data.p2Name, data.p2Symbol, data.p2Computer, data.p2Imperfect);
+        const p1 = Player(
+            data.p1Name,
+            data.p1Symbol,
+            data.p1Computer,
+            data.p1Imperfect
+        );
+        const p2 = Player(
+            data.p2Name,
+            data.p2Symbol,
+            data.p2Computer,
+            data.p2Imperfect
+        );
         state = State(board, p1, p2);
-        events.emit("boardUpdated", state)
+        events.emit("boardUpdated", state);
         events.emit("gameStart", "");
-        events.emit("nextPlayerUpdated", logic.player(state))
-    }
+        events.emit("nextPlayerUpdated", logic.player(state));
+    };
 
     const resolveBoard = () => {
         /**
          * Check if state is won or drawn
          */
-        const data = logic.winner(state)
+        const data = logic.winner(state);
         if (data) {
             events.emit("gameWon", data);
         } else if (logic.terminal(state)) {
             events.emit("gameDrawn", "");
         }
-
-    }
+    };
 
     const humanClickedCell = (cell) => {
         /**
@@ -1026,19 +1183,19 @@ const game = (() => {
         if (!logic.player(state).isAi() === true) {
             clickedCell(cell);
         }
-    }
+    };
 
     const aiClickedCell = (cell) => {
         /**
          * Wrapper that just passes through AI clicks to clickedCell
          */
         clickedCell(cell);
-    }
+    };
 
     const clickedCell = (cell) => {
         /**
          * Takes coordinates of clicked cell and processes game update
-         * 
+         *
          * @param {number[]} cell - [x, y] coordinates of cell that was clicked
          */
         if (state.board.getBoard()[cell[1]][cell[0]] != null) {
@@ -1048,11 +1205,10 @@ const game = (() => {
 
             events.emit("boardUpdated", state);
             events.emit("nextPlayerUpdated", logic.player(state));
-    
+
             resolveBoard();
         }
-
-    }
+    };
 
     const resetGame = () => {
         /**
@@ -1063,11 +1219,11 @@ const game = (() => {
         const p2 = Player();
         const state = State(board, p1, p2);
 
-        clearTimeout(queuedNextTurn)
+        clearTimeout(queuedNextTurn);
 
         events.emit("boardUpdated", state);
         events.emit("gameReset");
-    }
+    };
 
     const checkForAiMove = (_) => {
         /**
@@ -1076,7 +1232,7 @@ const game = (() => {
          * Otherwise plays minimax optimal move.
          */
         if (!logic.terminal(state)) {
-            const nextPlayer = logic.player(state)
+            const nextPlayer = logic.player(state);
             if (nextPlayer.isAi() === true) {
                 events.emit("startAiTurn"); // announce start of AI turn so board gets disabled
 
@@ -1087,19 +1243,20 @@ const game = (() => {
                 } else {
                     nextMove = logic.minimax(state);
                 }
-                queuedNextTurn = setTimeout(() => {events.emit("aiClickedCell", nextMove)}, 200); // Time delay so the board doesn't all instantly fill when the game played is AI vs AI
+                queuedNextTurn = setTimeout(() => {
+                    events.emit("aiClickedCell", nextMove);
+                }, 200); // Time delay so the board doesn't all instantly fill when the game played is AI vs AI
             }
         }
-    }
+    };
 
     // Bind Events
     events.on("clickedStart", startGame);
     events.on("humanClickedCell", humanClickedCell);
-    events.on("aiClickedCell", aiClickedCell)
+    events.on("aiClickedCell", aiClickedCell);
     events.on("clickedReset", resetGame);
     events.on("nextPlayerUpdated", checkForAiMove);
 
     // Initialize in reset state
     resetGame();
-
 })();

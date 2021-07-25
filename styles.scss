@@ -1,7 +1,7 @@
 $primaryColour: rgb(47, 138, 199);
 $secondaryColour: #2ecc71;
-$tertiaryColour: #7F8C8D;
-$mainBackgroundColour: #ECF0F1;
+$tertiaryColour: #7f8c8d;
+$mainBackgroundColour: #ecf0f1;
 $overlayFadeColour: rgba(64, 64, 64, 0.66);
 
 $cellColour: $tertiaryColour;
@@ -26,7 +26,8 @@ body {
 /* Button Styling */
 /* Ref: https://moderncss.dev/css-button-styling-guide/ */
 
-.button, .cell {
+.button,
+.cell {
     border: none;
     background-color: transparent;
     font-family: inherit;
@@ -63,7 +64,11 @@ body {
     }
 
     &:active {
-        background-color: scale-color($primaryColour, $lightness: -25%, $saturation: -0%);
+        background-color: scale-color(
+            $primaryColour,
+            $lightness: -25%,
+            $saturation: -0%
+        );
     }
 
     &:focus {
@@ -87,7 +92,11 @@ body {
     }
 
     &:active {
-        background-color: scale-color($secondaryColour, $lightness: -25%, $saturation: -0%);
+        background-color: scale-color(
+            $secondaryColour,
+            $lightness: -25%,
+            $saturation: -0%
+        );
     }
 
     &:focus {
@@ -118,13 +127,17 @@ body {
     outline: transparent;
 
     position: relative; // Anchor for focus after pseudo-element
-    
+
     &:hover:not(:disabled) {
         background-color: scale-color($cellColour, $lightness: 20%);
     }
 
     &:active {
-        background-color: scale-color($cellColour, $lightness: -25%, $saturation: -0%);
+        background-color: scale-color(
+            $cellColour,
+            $lightness: -25%,
+            $saturation: -0%
+        );
         box-shadow: 0 5px #333;
         transform: translateY(4px);
     }
@@ -158,20 +171,25 @@ body {
 
     &:disabled {
         // background-color: $cellDisabledColour;
-        
+
         // background-color: $cellColour;
         // color: rgba(16, 16, 16, 0.8);
         // opacity: 0.7;
         cursor: default;
 
         // box-shadow: 0 9px #777
-        color: rgba(0,0,0,1)  // disable reset to remove the fade out. Fade out gets handled by .fade class
+        color: rgba(
+            0,
+            0,
+            0,
+            1
+        ); // disable reset to remove the fade out. Fade out gets handled by .fade class
     }
 }
 
 button.cell.winning-cell:disabled {
     background-color: $secondaryColour;
-    color: rgb(0,0,0);
+    color: rgb(0, 0, 0);
 }
 
 button.cell.fade:disabled {
@@ -179,7 +197,7 @@ button.cell.fade:disabled {
     color: rgba(16, 16, 16, 0.8);
     opacity: 0.7;
     cursor: default;
-    box-shadow: 0 9px #777
+    box-shadow: 0 9px #777;
 }
 
 h1 {
@@ -243,7 +261,7 @@ h4 {
 
 #n-container-main {
     max-width: 620px;
-    
+
     display: flex;
     flex-direction: row-reverse;
     flex-wrap: wrap;
@@ -286,13 +304,13 @@ h4 {
     flex: 1 1 600px;
     text-align: center;
     padding: 5px;
-    
+
     background-color: $mainBackgroundColour;
 
     @include child-border;
 }
 
-#n-container-game{
+#n-container-game {
     flex: 1 0 300px;
     text-align: center;
 
@@ -306,15 +324,15 @@ h4 {
 #game-board {
     width: 300px;
     height: 350px;
-    
+
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr 0px;
-    
+
     grid-column-gap: 3px;
     grid-row-gap: 12px;
     // background-color: white;
-    
+
     margin: 0px auto 0px auto;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -360,7 +378,8 @@ h4 {
     margin: 8px 0;
     display: inline-block;
 
-    & input[type=text], select {
+    & input[type="text"],
+    select {
         background: transparent;
         border: solid 1px $tertiaryColour;
         border-radius: 4px;
@@ -370,10 +389,9 @@ h4 {
 
         font-size: 16px;
         height: 34px;
-        
     }
 
-    & input[type=text] {
+    & input[type="text"] {
         width: 132px;
     }
 
@@ -381,7 +399,7 @@ h4 {
         width: 62px;
     }
 
-    & input[type=text]:placeholder-shown + label {
+    & input[type="text"]:placeholder-shown + label {
         color: $tertiaryColour;
         font-size: 16px;
         left: 6px;
@@ -389,7 +407,7 @@ h4 {
     }
 
     & label,
-    input[type=text]:focus + label {
+    input[type="text"]:focus + label {
         color: $primaryColour;
         background-color: $mainBackgroundColour;
         padding: 0 4px;
@@ -401,21 +419,20 @@ h4 {
         transition: top 0.2s, left 0.2s, font-size 0.2s;
     }
 
-    & input[type=text]::placeholder {
+    & input[type="text"]::placeholder {
         color: transparent;
         display: none;
     }
 
-    & input[type=text]:focus,
+    & input[type="text"]:focus,
     select:focus {
         border: solid 1px $primaryColour;
         outline: none;
     }
 
-    & input[type=text]:not(:focus) + label,
+    & input[type="text"]:not(:focus) + label,
     select:not(:focus) + label {
         color: $tertiaryColour;
-
     }
 }
 
