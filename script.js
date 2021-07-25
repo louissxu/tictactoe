@@ -63,7 +63,7 @@ const logic = (() => {
          * @returns {Player} returns player object corresponding to the next player
          */
 
-        turnDiff = state.board
+        const turnDiff = state.board
             .getBoard()
             .flat()
             .reduce((acc, cur) => {
@@ -110,9 +110,6 @@ const logic = (() => {
          * @param {number[]} action - coordinate of location for action to be taken [x, y]
          * @returns {State} new State object corresponding with new board state
          */
-
-        const x = action[0];
-        const y = action[1];
 
         const newBoard = Board(state.board.getBoard());
         newBoard.setCell(action, player(state).getSymbol());
@@ -600,7 +597,7 @@ const ui = (() => {
     ];
 
     // Add symbols from above data to select boxes in UI
-    for (i = 0; i < names.length; i++) {
+    for (let i = 0; i < names.length; i++) {
         const opt1 = document.createElement("option");
         opt1.value = names[i][0][1];
         opt1.innerHTML = names[i][0][1];
@@ -615,7 +612,7 @@ const ui = (() => {
     // UI Functions
 
     // Functions handling Button clicks and UI clicks
-    const clickedStart = (e) => {
+    const clickedStart = (_) => {
         /**
          * Takes values from all the player input fields.
          * Puts in default values if fields are empty.
@@ -624,16 +621,16 @@ const ui = (() => {
          */
 
         // Fill default values if nothing entered
-        p1NameVal = String(p1Name.value) || "Player 1";
-        p1SymbolVal = String(p1Symbol.value) || "X";
-        p1ImperfectVal = Boolean(p1Imperfect.checked) || false;
-        p2NameVal = String(p2Name.value) || "Player 2";
-        p2SymbolVal = String(p2Symbol.value) || "O";
-        p2ImperfectVal = Boolean(p2Imperfect.checked) || false;
+        const p1NameVal = String(p1Name.value) || "Player 1";
+        const p1SymbolVal = String(p1Symbol.value) || "X";
+        const p1ImperfectVal = Boolean(p1Imperfect.checked) || false;
+        const p2NameVal = String(p2Name.value) || "Player 2";
+        const p2SymbolVal = String(p2Symbol.value) || "O";
+        const p2ImperfectVal = Boolean(p2Imperfect.checked) || false;
 
         // Ref: https://stackoverflow.com/a/41037200
-        p1ComputerVal = p1Computer.find((r) => r.checked).value || "human";
-        p2ComputerVal = p2Computer.find((r) => r.checked).value || "human";
+        const p1ComputerVal = p1Computer.find((r) => r.checked).value || "human";
+        const p2ComputerVal = p2Computer.find((r) => r.checked).value || "human";
 
         events.emit("clickedStart", {
             p1Name: p1NameVal,
@@ -647,7 +644,7 @@ const ui = (() => {
         });
     };
 
-    const clickedDemo = (e) => {
+    const clickedDemo = (_) => {
         /**
          * Plays a demo game with random values (from dummy data list) and two imperfect AIs.
          * Picks random values. Inserts the values into the UI fields then starts the game.
@@ -680,7 +677,7 @@ const ui = (() => {
         clickedStart("");
     };
 
-    const clickedReset = (e) => {
+    const clickedReset = (_) => {
         /**
          * Fires when the reset button is clicked.
          */
@@ -889,9 +886,9 @@ const ui = (() => {
                 context,
                 start,
                 end,
-                (stroke = "black"),
-                (width = 5),
-                (alpha = 0.7)
+                "black",
+                5,
+                0.7,
             );
         });
         canvas.style.display = "block";
@@ -968,7 +965,7 @@ const ui = (() => {
         alertText.textContent = `Draw! Try again.`;
     };
 
-    const renderGameReset = (board) => {
+    const renderGameReset = () => {
         disableBoard();
         alertText.textContent = 'Press "Start Game" to begin.';
 
@@ -1225,7 +1222,7 @@ const game = (() => {
         events.emit("gameReset");
     };
 
-    const checkForAiMove = (_) => {
+    const checkForAiMove = () => {
         /**
          * Checks if current player is AI and queues AI move if it is.
          * If AI is imperfect, it has a certain percentage chance of playing a random move.
