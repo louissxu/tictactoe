@@ -65,7 +65,7 @@ As a design decision, the cache was not kept between turns/games and instead was
 ## CSS
 The controls and zones are laid out with CSS flexbox. The design is responsive with minimum design size of 320px width to accommodate phones/tablets. The game board cells are laid out with CSS grid.
 
-CSS is written in Sass and compiled to plain CSS using node-sass via a VS Code build script.
+CSS is written in SCSS and compiled to plain CSS using node-sass via a VS Code build script.
 
 UX design from a mix of sources. Some loosely based on material design components. All coded in plain css without the use of a front-end framework.
 
