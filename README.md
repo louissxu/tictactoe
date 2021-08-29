@@ -46,7 +46,7 @@ Alpha-beta pruning can be added to the search strategy to decrease the number of
 
 Memoisation is another possible optimisation. By keeping a cache of calls that have been made, identical recursive calls can be avoided by returning the stored value rather than performing a repeat search of that subtree. This reduces the number of minimax calls to ~16k. However, this is at a cost of a cache that contains ~4.5k entries.
 
-These optimisation strategies can be combined. However, this needs to be done carefully. Only nodes that were searched precisely (i.e., searched to full depth and not discarded due to alpha-beta pruning) can be added to the cache.
+These optimisation strategies can be combined. However, this needs to be done carefully. Only nodes that were searched precisely (i.e. searched to full depth and not discarded due to alpha-beta pruning) can be added to the cache.
 
 With both alpha-beta pruning and memoisation enabled, the number of minimax calls is reduced to ~21k with a cache size of only ~0.5k entries.
 
