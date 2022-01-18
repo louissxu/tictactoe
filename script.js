@@ -666,12 +666,12 @@ const ui = (() => {
         p1Name.value = choice[0][0];
         p1Symbol.value = choice[0][1];
         p1Ai.checked = true;
-        p1Imperfect.checked = true;
+        p1Imperfect.checked = false;
 
         p2Name.value = choice[1][0];
         p2Symbol.value = choice[1][1];
         p2Ai.checked = true;
-        p2Imperfect.checked = true;
+        p2Imperfect.checked = false;
 
         // Starts game
         clickedStart("");
