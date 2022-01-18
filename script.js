@@ -646,7 +646,7 @@ const ui = (() => {
 
     const clickedDemo = (_) => {
         /**
-         * Plays a demo game with random values (from dummy data list) and two imperfect AIs.
+         * Plays a demo game with random values (from dummy data list) and two perfect AIs.
          * Picks random values. Inserts the values into the UI fields then starts the game.
          */
 
